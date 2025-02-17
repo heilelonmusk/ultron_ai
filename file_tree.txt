@@ -1,0 +1,39 @@
+├── config
+│   ├── corsConfig.js
+│   ├── envConfig.js
+│   ├── mongooseConfig.js
+│   ├── netlifyConfig.js
+│   ├── rateLimitConfig.js
+│   └── redisConfig.js
+├── docs
+│   ├── AI_DEVELOPER_NOTES.md
+│   ├── README.md
+│   ├── TROUBLESHOOTING.md
+│   └── project_meta.yaml
+├── logs
+├── node_modules [93 items]
+├── package-lock.json
+├── package.json
+├── public
+├── scripts
+├── src
+│   ├── api
+│   │   ├── controllers
+│   │   ├── routes
+│   │   └── services
+│   ├── iframe
+│   ├── modules
+│   │   ├── intent
+│   │   ├── loggin
+│   │   └── nlp
+│   ├── ultron_chat
+│   └── utils
+│       ├── buildStructure.js
+│       ├── fileManager.js
+│       └── fileTreeGenerator.js
+├── structure.config.json
+├── tests
+│   ├── integration
+│   └── unit
+│       └── fileManager.test.js
+└── ultron_ai@1.0.0

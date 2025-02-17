@@ -1,0 +1,32 @@
+{
+  "config": [
+    "envConfig.js",
+    "mongooseConfig.js",
+    "redisConfig.js",
+    "netlifyConfig.js",
+    "rateLimitConfig.js",
+    "corsConfig.js"
+  ],
+  "docs": [
+    "README.md",
+    "AI_DEVELOPER_NOTES.md",
+    "TROUBLESHOOTING.md",
+    "project_meta.yaml"
+  ],
+  "src": {
+    "utils": [
+      "fileManager.js",
+      "fileTreeGenerator.js",
+      "buildStructure.js"
+    ]
+  },
+  "tests": {
+    "unit": [
+      "fileManager.test.js"
+    ]
+  },
+  "root": [
+    "structure.config.json",
+    "package.json"
+  ]
+}
