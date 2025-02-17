@@ -1,39 +1,84 @@
+├── .DS_Store
+├── .git
+├── FETCH_HEAD
+├── HEAD
 ├── config
-│   ├── corsConfig.js
-│   ├── envConfig.js
-│   ├── mongooseConfig.js
-│   ├── netlifyConfig.js
-│   ├── rateLimitConfig.js
-│   └── redisConfig.js
-├── docs
-│   ├── AI_DEVELOPER_NOTES.md
-│   ├── README.md
-│   ├── TROUBLESHOOTING.md
-│   └── project_meta.yaml
+├── description
+├── hooks
+├── applypatch-msg.sample
+├── commit-msg.sample
+├── fsmonitor-watchman.sample
+├── post-update.sample
+├── pre-applypatch.sample
+├── pre-commit.sample
+├── pre-merge-commit.sample
+├── pre-push.sample
+├── pre-rebase.sample
+├── pre-receive.sample
+├── prepare-commit-msg.sample
+├── push-to-checkout.sample
+├── sendemail-validate.sample
+└── update.sample
+├── index
+├── info
+└── exclude
 ├── logs
-├── node_modules [93 items]
+├── HEAD
+└── refs
+├── heads
+└── main
+└── remotes
+└── origin
+├── HEAD
+└── main
+├── objects
+├── info
+└── pack
+├── pack-32e0cb5c00dbe348390cc8e2fee1e674282954dd.idx
+├── pack-32e0cb5c00dbe348390cc8e2fee1e674282954dd.pack
+└── pack-32e0cb5c00dbe348390cc8e2fee1e674282954dd.rev
+└── refs
+├── heads
+└── main
+├── remotes
+└── origin
+├── HEAD
+└── main
+└── tags
+├── .github
+└── workflows
+└── update_file_tree.yml
+├── .gitignore
+├── LICENSE
+├── README.md
+├── config
+├── corsConfig.js
+├── envConfig.js
+├── mongooseConfig.js
+├── netlifyConfig.js
+├── rateLimitConfig.js
+└── redisConfig.js
+├── description.json
+├── docs
+├── AI_DEVELOPER_NOTES.md
+├── README.md
+├── TROUBLESHOOTING.md
+└── project_meta.yaml
+├── file_tree.txt
+├── node_modules [96 items]
 ├── package-lock.json
 ├── package.json
-├── public
 ├── scripts
+└── envManager
 ├── src
-│   ├── api
-│   │   ├── controllers
-│   │   ├── routes
-│   │   └── services
-│   ├── iframe
-│   ├── modules
-│   │   ├── intent
-│   │   ├── loggin
-│   │   └── nlp
-│   ├── ultron_chat
-│   └── utils
-│       ├── buildStructure.js
-│       ├── fileManager.js
-│       └── fileTreeGenerator.js
+├── .DS_Store
+└── utils
+├── buildStructure.js
+├── fileManager.js
+└── fileTreeGenerator.js
 ├── structure.config.json
 ├── tests
-│   ├── integration
-│   └── unit
-│       └── fileManager.test.js
+├── .DS_Store
+└── unit
+└── fileManager.test.js
 └── ultron_ai@1.0.0
