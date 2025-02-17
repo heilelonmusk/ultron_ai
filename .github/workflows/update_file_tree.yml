@@ -38,9 +38,9 @@ jobs:
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
         if git diff --quiet; then
-          echo "::set-output name=changed::false"
+        echo "changed=false" >> $GITHUB_OUTPUT
         else
-          echo "::set-output name=changed::true"
+        echo "changed=true" >> $GITHUB_OUTPUT
         fi
 
     - name: Commit and Push changes
@@ -49,10 +49,3 @@ jobs:
         git add file_tree.txt
         git commit -m "Auto-update file_tree.txt [CI]" || echo "No changes to commit"
         git push origin HEAD:main
-
-    - name: Upload Artifact (Optional)
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: file-tree
-        path: file_tree.txt
