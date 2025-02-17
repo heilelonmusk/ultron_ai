@@ -1,5 +1,8 @@
 name: Update File Tree
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: 

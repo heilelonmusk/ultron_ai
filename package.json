@@ -3,18 +3,17 @@
   "version": "1.0.0",
   "description": "A modular, autonomous ecosystem.",
   "main": "index.js",
-  
-  "scripts": 
-  {
+  "scripts": {
     "test": "mocha \"tests/**/*.test.js\""
   },
-  
-  "devDependencies": 
-  {
+  "devDependencies": {
     "chai": "^5.2.0",
     "mocha": "^11.1.0"
   },
-  
   "author": "Heil Elon",
-  "license": "X.B99"
+  "license": "X.B99",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7"
+  }
 }
