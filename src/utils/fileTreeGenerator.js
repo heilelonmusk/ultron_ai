@@ -32,7 +32,6 @@ function getDescription(metadata, keyPath) {
   const keys = keyPath.split('/');
   let current = metadata;
   for (let key of keys) {
-    // Convert both key and object keys to lower case for case-insensitive matching
     const lowerKey = key.toLowerCase();
     const foundKey = Object.keys(current).find(k => k.toLowerCase() === lowerKey);
     if (foundKey) {
@@ -65,7 +64,7 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
     return `${indent}[Error reading directory]\n`;
   }
   
-  // Ordina gli elementi alfabeticamente per una visualizzazione più chiara
+  // Sort items alphabetically (case-insensitive)
   items.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   
   items.forEach((item, index) => {
@@ -78,10 +77,10 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
     } catch (error) {
       stats = null;
     }
-    // Costruisci la chiave per il metadata
+    // Construct new metadata key
     const newKey = currentKey ? `${currentKey}/${item}` : item;
     if (stats && stats.isDirectory()) {
-      // Verifica se la cartella è da escludere (case-insensitive)
+      // Check if this directory should be compressed (case-insensitive)
       if (excludeDirs.map(dir => dir.toLowerCase()).includes(item.toLowerCase())) {
         let count = 0;
         try {
@@ -111,9 +110,9 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
  * @param {string} baseDir - The base directory to generate the tree from.
  * @param {string} outputFile - The output file path where the tree will be written.
  * @param {object} [options={}] - Options for generation (e.g., { excludeDirs: ["node_modules"] }).
- * @param {string} [metaPath='./descriptions.json'] - Path to the metadata file.
+ * @param {string} [metaPath='./description.json'] - Path to the metadata file.
  */
-function writeFileTree(baseDir, outputFile, options = {}, metaPath = './descriptions.json') {
+function writeFileTree(baseDir, outputFile, options = {}, metaPath = './description.json') {
   const metadata = loadMetadata(metaPath);
   const tree = generateFileTree(baseDir, options, metadata);
   fs.writeFileSync(outputFile, tree, 'utf8');

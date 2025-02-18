@@ -164,6 +164,7 @@
 └── c46687a2e8aa367b285349f7e990cd2b5bfa5c
 ├── 16
 ├── 92af01e2878914e6174a6cd8dfe4f2f1c713d1
+├── 99ebee60af389e49033b7b64d00f4d914dd41f
 └── f7c8c7bdc64645a201065cb264cb561eac851c
 ├── 17
 ├── 0fd1ad52520f2ea381836419fde096063531a3
@@ -196,6 +197,7 @@
 ├── 9820e262b26b60fe71a4dcd9bc9cfd0a01f26e
 └── bae2373bb18efdc124f21f1a9751c8d8773fa1
 ├── 1b
+├── 3a14d4024a77d36c362b0b12bc2aaf4197941a
 ├── 4579140e52332cbbd356eede45c493e451b29c
 └── 4b3aa21075d4528a7513c1ecd9db97e34c2c9b
 ├── 1c
@@ -945,6 +947,7 @@
 └── de36591c6876c72d5330291dbf9a867fc102fd
 ├── 97
 ├── 8750fcc5a57cf4a81449ea6f60e0ed3a958144
+├── a55c2ee9409eaf5d1813968a8febc1e17ffd94
 ├── ad7fbabc52b54b1d9c4c50236c3a81d78218a7
 └── f8e32ed82e4c5254e55c9d1855ea9d922ff761
 ├── 98
@@ -1118,6 +1121,7 @@
 ├── df404d15a0e30593d127184357e5ff511eb38a
 └── fa4513c90838699f7138207183d99ef000f926
 ├── b6
+├── 4554d99ff2e950225d0d3c773377d43b3404bb
 ├── 48e5737be6168bff5137cb1a5a897e55ce193d
 ├── 634690a4a0c03d4c50239bc16fa38440dea5ae
 ├── 97312e624e662fff30480767b1bce3ffa58333
@@ -1410,6 +1414,7 @@
 ├── 4e4dcbd2975e090c4530273bd94c0a6c7f0ea8
 ├── 523513df11515b451e4aa699694e355baa072f
 ├── 5c1f9c4cb03257181652847417840688521cb2
+├── 67fc45e8c5c44077d335bea1144f709caa9c7c
 ├── 766157894c8ddd18796dcc97bd1a715587e6f9
 ├── b237b5b16395895e310d18d0733410c940d17a
 └── f455c325b0073da71b0594ebb4a0e84c6f8f43
@@ -1558,6 +1563,7 @@
 ├── 7ceba3eb4a9657a9db7f3ffca4e4e97a9019de
 ├── 9162b51acb582ac3b63c75552db2ca9b9d9bb2
 ├── a841f22c70f52b4ba68d215e7a211225514069
+├── adbbdcee6297f861900c1c8cc5ca9ea1bc2554
 ├── f9ddd0e9c96cdfbacba10703866fec6e445828
 └── fbf71a9a87772ea4622d5727f0c2dcd6137cd2
 ├── fb
@@ -1609,7 +1615,7 @@
 ├── update_file_tree.yml
 └── update_variables.yml
 ├── .gitignore
-├── config
+├── config - Contains configuration files like environment variables and service settings.
 ├── corsConfig.js
 ├── envConfig.js
 ├── mongooseConfig.js
@@ -1617,7 +1623,7 @@
 ├── rateLimitConfig.js
 └── redisConfig.js
 ├── description.json
-├── docs
+├── docs - Holds all project documentation including README, developer notes, and troubleshooting guides.
 ├── AI_DEVELOPER_NOTES.md
 ├── project_meta.yaml
 ├── README.md
@@ -1625,29 +1631,29 @@
 ├── env.txt
 ├── file_tree.txt
 ├── LICENSE
-├── logs
+├── logs - Log files for the application.
 ├── node_modules [98 items]
 ├── package-lock.json
 ├── package.json
-├── public
+├── public - Static assets like HTML, CSS, images, etc.
 ├── README.md
-├── scripts
+├── scripts - Automation and maintenance scripts.
 ├── autoUpdateDescriptions.js
 ├── envManager.js
 └── updateNetlifyVars.js
 ├── src
 ├── .DS_Store
-├── api
+├── api - API endpoints, controllers, and services for the application.
 ├── controllers
 ├── routes
 └── services
-├── iframe
+├── iframe - Module for blockchain-based airdrop verification.
 ├── modules
-├── intent
+├── intent - Intent recognition modules.
 ├── loggin
-└── nlp
-├── ultron_chat
-└── utils
+└── nlp - Natural Language Processing modules.
+├── ultron_chat - Module for the AI chatbot UI and interaction logic.
+└── utils - Utility modules for file management, tree generation, and structure bootstrapping.
 ├── buildStructure.js
 ├── fileManager.js
 ├── fileTreeGenerator.js
@@ -1655,7 +1661,7 @@
 ├── structure.config.json
 ├── tests
 ├── .DS_Store
-├── integration
-└── unit
+├── integration - Integration tests for overall system functionality.
+└── unit - Unit tests for individual modules.
 └── fileManager.test.js
 └── ultron_ai@1.0.0
