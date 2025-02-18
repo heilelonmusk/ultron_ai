@@ -48,14 +48,14 @@ function getDescription(metadata, keyPath) {
  *
  * @param {string} dirPath - The directory to generate the tree from.
  * @param {object} options - Options for generation.
- * @param {string[]} [options.excludeDirs=[]] - Array of directory names to compress (case-insensitive).
+ * @param {string[]} [options.compressDirs=[]] - Array of directory names to compress (case-insensitive, e.g. ["node_modules"]).
  * @param {string} [options.indent=''] - The current indentation string.
  * @param {object} [metadata={}] - Metadata object for descriptions.
  * @param {string} [currentKey=''] - The current key path for metadata lookup.
  * @returns {string} The generated file tree as a string.
  */
 function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '') {
-  const { excludeDirs = [], indent = '' } = options;
+  const { compressDirs = [], indent = '' } = options;
   let tree = '';
   let items;
   try {
@@ -77,11 +77,11 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
     } catch (error) {
       stats = null;
     }
-    // Construct new metadata key
     const newKey = currentKey ? `${currentKey}/${item}` : item;
+    
     if (stats && stats.isDirectory()) {
-      // Check if this directory should be compressed (case-insensitive)
-      if (excludeDirs.map(dir => dir.toLowerCase()).includes(item.toLowerCase())) {
+      // Se la directory è tra quelle da comprimere (es. node_modules)
+      if (compressDirs.map(dir => dir.toLowerCase()).includes(item.toLowerCase())) {
         let count = 0;
         try {
           count = fs.readdirSync(fullPath).length;
@@ -109,7 +109,7 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
  *
  * @param {string} baseDir - The base directory to generate the tree from.
  * @param {string} outputFile - The output file path where the tree will be written.
- * @param {object} [options={}] - Options for generation (e.g., { excludeDirs: ["node_modules"] }).
+ * @param {object} [options={}] - Options for generation (e.g., { compressDirs: ["node_modules", ".git"] }).
  * @param {string} [metaPath='./description.json'] - Path to the metadata file.
  */
 function writeFileTree(baseDir, outputFile, options = {}, metaPath = './description.json') {
