@@ -1,16 +1,26 @@
 // scripts/updateAllVars.js
 const fs = require('fs');
 const path = require('path');
-// Verifica se esiste un file .env nella directory corrente e caricalo
-if (fs.existsSync(path.join(process.cwd(), '.env'))) {
-  require('dotenv').config();
+
+// Prova a ottenere il current working directory, altrimenti usa __dirname
+let cwd;
+try {
+  cwd = process.cwd();
+} catch (error) {
+  cwd = __dirname;
 }
+
+// Se esiste un file .env nel working directory, caricalo
+if (fs.existsSync(path.join(cwd, '.env'))) {
+  require('dotenv').config({ path: path.join(cwd, '.env') });
+}
+
 const config = require('../config/envConfig');
 
 // Importa le funzioni di aggiornamento per ogni servizio
 const { updateGithubSecret } = require('./updateGithubVars');
 const { updateNetlifyVars } = require('./updateNetlifyVars');
-// Altri aggiornamenti possono essere aggiunti qui
+// Puoi aggiungere altri aggiornamenti per altri servizi qui
 
 /**
  * Updates environment variables on all services based on the current configuration.
