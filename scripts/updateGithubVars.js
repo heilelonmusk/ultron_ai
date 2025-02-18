@@ -24,7 +24,7 @@ export async function updateGithubSecret() {
   const githubToken = process.env.MY_GITHUB_TOKEN;
 
 
-  if (!owner || !repo || !secretValue || !githubToken) {
+  if (!owner || !repo || !githubToken) {
     throw new Error('Missing required environment variables (MY_GITHUB_OWNER, MY_GITHUB_REPO, MY_GITHUB_TOKEN).');
   }
 
