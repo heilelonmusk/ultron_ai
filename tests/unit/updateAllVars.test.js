@@ -1,12 +1,16 @@
 /**
  * @file updateAllVars.test.js
  * @description Unit tests for the updateAllVars module.
- * The tests use proxyquire and sinon to stub dependent update functions.
+ * Uses proxyquire and sinon to stub dependent update functions.
  */
 
 const { expect } = require('chai');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
+const path = require('path');
+
+// Imposta il working directory a un percorso esistente (ad esempio, la directory corrente del test)
+process.chdir(__dirname);
 
 describe('updateAllVars Module', function () {
   let updateGithubSecretStub, updateNetlifyVarsStub, updateAllVars;
@@ -41,7 +45,6 @@ describe('updateAllVars Module', function () {
     process.env.UPDATE_GITHUB_VARS = 'true';
     process.env.UPDATE_NETLIFY_VARS = 'false';
     
-    // Reset stub history
     updateGithubSecretStub.resetHistory();
     updateNetlifyVarsStub.resetHistory();
     

@@ -17,17 +17,19 @@ describe('updateGithubVars', function () {
   afterEach(() => nock.cleanAll());
 
   it('should update GitHub secret successfully', async function () {
-    // Simula il recupero della chiave pubblica
+    // Genera una chiave pubblica valida di 32 bytes
+    const validPublicKey = Buffer.alloc(32).toString('base64');
     const publicKeyResponse = {
-      key: 'publicKeyExample==',
+      key: validPublicKey,
       key_id: 'key123'
     };
+
     const scope = nock('https://api.github.com')
       .get(`/repos/test-owner/test-repo/actions/secrets/public-key`)
       .reply(200, publicKeyResponse)
       .put(`/repos/test-owner/test-repo/actions/secrets/MY_GITHUB_SECRET`, (body) => {
-        // Verifica che il body contenga una chiave key_id uguale a 'key123'
-        return body.key_id === 'key123' && body.encrypted_value;
+        // Verifica che il body contenga key_id 'key123' e un encrypted_value non vuoto
+        return body.key_id === 'key123' && typeof body.encrypted_value === 'string' && body.encrypted_value.length > 0;
       })
       .reply(200, {});
 
@@ -36,10 +38,11 @@ describe('updateGithubVars', function () {
   });
 
   it('should throw an error if GitHub API responds with an error', async function () {
+    const validPublicKey = Buffer.alloc(32).toString('base64');
     nock('https://api.github.com')
       .get(`/repos/test-owner/test-repo/actions/secrets/public-key`)
       .reply(200, {
-        key: 'publicKeyExample==',
+        key: validPublicKey,
         key_id: 'key123'
       })
       .put(`/repos/test-owner/test-repo/actions/secrets/MY_GITHUB_SECRET`)
