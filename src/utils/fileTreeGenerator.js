@@ -32,8 +32,11 @@ function getDescription(metadata, keyPath) {
   const keys = keyPath.split('/');
   let current = metadata;
   for (let key of keys) {
-    if (current[key]) {
-      current = current[key];
+    // Convert both key and object keys to lower case for case-insensitive matching
+    const lowerKey = key.toLowerCase();
+    const foundKey = Object.keys(current).find(k => k.toLowerCase() === lowerKey);
+    if (foundKey) {
+      current = current[foundKey];
     } else {
       return '';
     }
@@ -46,7 +49,7 @@ function getDescription(metadata, keyPath) {
  *
  * @param {string} dirPath - The directory to generate the tree from.
  * @param {object} options - Options for generation.
- * @param {string[]} [options.excludeDirs=[]] - Array of directory names to compress (e.g., ["node_modules"]).
+ * @param {string[]} [options.excludeDirs=[]] - Array of directory names to compress (case-insensitive).
  * @param {string} [options.indent=''] - The current indentation string.
  * @param {object} [metadata={}] - Metadata object for descriptions.
  * @param {string} [currentKey=''] - The current key path for metadata lookup.
@@ -62,6 +65,9 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
     return `${indent}[Error reading directory]\n`;
   }
   
+  // Ordina gli elementi alfabeticamente per una visualizzazione più chiara
+  items.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  
   items.forEach((item, index) => {
     const fullPath = path.join(dirPath, item);
     const isLast = index === items.length - 1;
@@ -72,10 +78,11 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
     } catch (error) {
       stats = null;
     }
-    // Construct new metadata key
+    // Costruisci la chiave per il metadata
     const newKey = currentKey ? `${currentKey}/${item}` : item;
     if (stats && stats.isDirectory()) {
-      if (excludeDirs.includes(item)) {
+      // Verifica se la cartella è da escludere (case-insensitive)
+      if (excludeDirs.map(dir => dir.toLowerCase()).includes(item.toLowerCase())) {
         let count = 0;
         try {
           count = fs.readdirSync(fullPath).length;
