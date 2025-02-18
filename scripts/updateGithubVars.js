@@ -1,59 +1,67 @@
-// tests/unit/updateGithubVars.test.js
+// scripts/updateGithubVars.js
 /**
- * @file updateGithubVars.test.js
- * @description Unit tests for the updateGithubVars function using nock to simulate GitHub API.
+ * Updates a GitHub secret (MY_GITHUB_SECRET) for the repository.
+ * Reads the following environment variables:
+ *   - GITHUB_OWNER: Repository owner (e.g., 'test-owner')
+ *   - GITHUB_REPO: Repository name (e.g., 'test-repo')
+ *   - MY_GITHUB_SECRET_VALUE: The new secret value to set
+ *   - GITHUB_TOKEN: A token with appropriate repository permissions
+ *
+ * @returns {Promise<void>}
  */
+ 
+import { Octokit } from '@octokit/rest';
+import tweetsodiumModule from 'tweetsodium';
 
-import { expect } from 'chai';
-import nock from 'nock';
-import { updateGithubSecret } from '../../scripts/updateGithubVars.js';
+async function updateGithubSecret() {
+  // Ottieni la funzione 'seal' dal default export di tweetsodiumModule
+  const { default: seal } = tweetsodiumModule;
 
-// Imposta le variabili d'ambiente necessarie per il test
-process.env.GITHUB_OWNER = 'test-owner';
-process.env.GITHUB_REPO = 'test-repo';
-process.env.MY_GITHUB_SECRET_VALUE = 'secret_value';
-process.env.GITHUB_TOKEN = 'test-token';
+  const owner = process.env.MY_GITHUB_OWNER;
+  const repo = process.env.MY_GITHUB_REPO;
+  const secretName = 'MY_GITHUB_TOKEN';
+  const githubToken = process.env.MY_GITHUB_TOKEN;
+  const url = process.env.MY_GITHUB_URL;
 
-describe('updateGithubVars', function () {
-  afterEach(() => nock.cleanAll());
+  if (!owner || !repo || !secretValue || !githubToken) {
+    throw new Error('Missing required environment variables.');
+  }
 
-  it('should update GitHub secret successfully', async function () {
-    // Genera una chiave pubblica valida di 32 bytes
-    const validPublicKey = Buffer.alloc(32).toString('base64');
-    const publicKeyResponse = {
-      key: validPublicKey,
-      key_id: 'key123'
-    };
+  // Crea un'istanza di Octokit
+  const octokit = new Octokit({ auth: githubToken });
 
-    const scope = nock('https://api.github.com')
-      .get(`/repos/test-owner/test-repo/actions/secrets/public-key`)
-      .reply(200, publicKeyResponse)
-      .put(`/repos/test-owner/test-repo/actions/secrets/MY_GITHUB_SECRET`, (body) => {
-        // Verifica che il body contenga key_id 'key123' e un encrypted_value non vuoto
-        return body.key_id === 'key123' && typeof body.encrypted_value === 'string' && body.encrypted_value.length > 0;
-      })
-      .reply(200, {});
+  // Recupera la chiave pubblica per le secret del repository
+  const { data: publicKeyData } = await octokit.actions.getRepoPublicKey({
+    owner,
+    repo,
+  });
+  const publicKey = publicKeyData.key;
+  const keyId = publicKeyData.key_id;
 
-    await updateGithubSecret();
-    expect(scope.isDone()).to.be.true;
+  // Cifra il valore della secret usando la funzione 'seal'
+  const messageBytes = Buffer.from(secretValue);
+  const keyBytes = Buffer.from(publicKey, 'base64');
+  const encryptedBytes = seal(messageBytes, keyBytes);
+  const encryptedValue = Buffer.from(encryptedBytes).toString('base64');
+
+  // Crea o aggiorna la secret sul repository GitHub
+  await octokit.actions.createOrUpdateRepoSecret({
+    owner,
+    repo,
+    secret_name: secretName,
+    encrypted_value: encryptedValue,
+    key_id: keyId,
   });
 
-  it('should throw an error if GitHub API responds with an error', async function () {
-    const validPublicKey = Buffer.alloc(32).toString('base64');
-    nock('https://api.github.com')
-      .get(`/repos/test-owner/test-repo/actions/secrets/public-key`)
-      .reply(200, {
-        key: validPublicKey,
-        key_id: 'key123'
-      })
-      .put(`/repos/test-owner/test-repo/actions/secrets/MY_GITHUB_SECRET`)
-      .reply(400, { error: 'Bad Request' });
+  console.log(`Secret "${secretName}" updated successfully.`);
+}
 
-    try {
-      await updateGithubSecret();
-      throw new Error('Test should have failed');
-    } catch (error) {
-      expect(error.message).to.match(/400|Bad Request/);
-    }
+// Se il modulo viene eseguito direttamente, esegue la funzione
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+  updateGithubSecret().catch((err) => {
+    console.error(err);
+    process.exit(1);
   });
-});
+}
+
+export { updateGithubSecret };
