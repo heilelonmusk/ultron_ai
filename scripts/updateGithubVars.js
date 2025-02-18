@@ -1,51 +1,35 @@
-// scripts/updateGithubVars.js
-/**
- * Updates a GitHub secret (MY_GITHUB_SECRET) for the repository.
- * Reads the following environment variables:
- *   - MY_GITHUB_OWNER: Repository owner (e.g., 'test-owner')
- *   - MY_GITHUB_REPO: Repository name (e.g., 'test-repo')
- *   - MY_GITHUB_SECRET_VALUE: The new secret value to set
- *   - MY_GITHUB_TOKEN: A token with appropriate repository permissions
- *
- * @returns {Promise<void>}
- */
-
-import 'dotenv/config'; // Se vuoi caricare .env qui
+import 'dotenv/config';
 import { Octokit } from '@octokit/rest';
-import tweetsodiumModule from 'tweetsodium';
+import tweetsodium from 'tweetsodium';
 
 export async function updateGithubSecret() {
-  // Extract the 'seal' function from tweetsodium default
-  const { default: seal } = tweetsodiumModule;
-
   const owner = process.env.MY_GITHUB_OWNER;
   const repo = process.env.MY_GITHUB_REPO;
-  const secretName = 'MY_GITHUB_TOKEN';
-  const githubToken = process.env.MY_GITHUB_TOKEN;
+  const token = process.env.MY_GITHUB_TOKEN; // da usare anche per l'autenticazione
 
-
-  if (!owner || !repo || !githubToken) {
-    throw new Error('Missing required environment variables (MY_GITHUB_OWNER, MY_GITHUB_REPO, MY_GITHUB_TOKEN).');
+  // Verifica che non manchi nulla
+  if (!owner || !repo || !token) {
+    throw new Error('Missing required environment variables: MY_GITHUB_OWNER, MY_GITHUB_REPO, MY_GITHUB_TOKEN');
   }
 
-  // Create Octokit instance
-  const octokit = new Octokit({ auth: githubToken });
+  // Nome della secret su GitHub
+  const secretName = 'MY_GITHUB_TOKEN';
 
-  // Get the repository’s public key
-  const { data: publicKeyData } = await octokit.actions.getRepoPublicKey({
-    owner,
-    repo
-  });
+  // Ottokit con lo stesso token (se usi un solo token per tutto)
+  const octokit = new Octokit({ auth: token });
+
+  // GET: public key
+  const { data: publicKeyData } = await octokit.actions.getRepoPublicKey({ owner, repo });
   const publicKey = publicKeyData.key;
   const keyId = publicKeyData.key_id;
 
-  // Encrypt the secret value using 'seal'
-  const messageBytes = Buffer.from(secretValue);
+  // Cifra il token
+  const messageBytes = Buffer.from(token);
   const keyBytes = Buffer.from(publicKey, 'base64');
-  const encryptedBytes = seal(messageBytes, keyBytes);
+  const encryptedBytes = tweetsodium.seal(messageBytes, keyBytes);
   const encryptedValue = Buffer.from(encryptedBytes).toString('base64');
 
-  // Create or update the secret in the GitHub repo
+  // PUT: secret
   await octokit.actions.createOrUpdateRepoSecret({
     owner,
     repo,
@@ -57,7 +41,7 @@ export async function updateGithubSecret() {
   console.log(`Secret "${secretName}" updated successfully.`);
 }
 
-// If file is run directly from the CLI, execute the function
+// Se vuoi farlo girare da CLI
 if (import.meta.url === process.argv[1] || import.meta.url === new URL(process.argv[1], 'file://').href) {
   updateGithubSecret().catch(err => {
     console.error(err);
