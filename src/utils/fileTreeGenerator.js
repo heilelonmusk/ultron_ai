@@ -1,13 +1,11 @@
 // src/utils/fileTreeGenerator.js
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Loads metadata descriptions from a JSON file.
- * @param {string} metaPath - The path to the metadata file.
- * @returns {object} The metadata object.
  */
-function loadMetadata(metaPath) {
+export function loadMetadata(metaPath) {
   if (fs.existsSync(metaPath)) {
     const rawData = fs.readFileSync(metaPath, 'utf8');
     try {
@@ -23,12 +21,8 @@ function loadMetadata(metaPath) {
 
 /**
  * Retrieves the description for a given key from the metadata.
- * Supports nested keys separated by '/'.
- * @param {object} metadata - The metadata object.
- * @param {string} keyPath - The path key (e.g., "src/utils").
- * @returns {string} The description if available, otherwise an empty string.
  */
-function getDescription(metadata, keyPath) {
+export function getDescription(metadata, keyPath) {
   const keys = keyPath.split('/');
   let current = metadata;
   for (let key of keys) {
@@ -45,16 +39,14 @@ function getDescription(metadata, keyPath) {
 
 /**
  * Recursively generates a tree representation of the directory structure.
- *
- * @param {string} dirPath - The directory to generate the tree from.
- * @param {object} options - Options for generation.
- * @param {string[]} [options.compressDirs=[]] - Array of directory names to compress (case-insensitive).
- * @param {string} [indent=''] - The current indentation string.
- * @param {object} [metadata={}] - Metadata object for descriptions.
- * @param {string} [currentKey=''] - The current key path for metadata lookup.
- * @returns {string} The generated file tree as a plain text string.
  */
-function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, currentKey = '') {
+export function generateFileTree(
+  dirPath,
+  options = {},
+  indent = '',
+  metadata = {},
+  currentKey = ''
+) {
   const { compressDirs = [] } = options;
   let tree = '';
   let items;
@@ -64,21 +56,19 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
     return `${indent}[Error reading directory]\n`;
   }
   
-  // Sort items alphabetically (case-insensitive)
   items.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   
-  // Separa le cartelle dai file per una migliore organizzazione
   const directories = items.filter(item => {
     try {
       return fs.statSync(path.join(dirPath, item)).isDirectory();
-    } catch (e) {
+    } catch {
       return false;
     }
   });
   const files = items.filter(item => {
     try {
       return !fs.statSync(path.join(dirPath, item)).isDirectory();
-    } catch (e) {
+    } catch {
       return false;
     }
   });
@@ -91,10 +81,9 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
     let stats;
     try {
       stats = fs.statSync(fullPath);
-    } catch (error) {
+    } catch {
       stats = null;
     }
-    // Build the metadata key for this item.
     const newKey = currentKey ? `${currentKey}/${item}` : item;
     
     if (stats && stats.isDirectory()) {
@@ -102,7 +91,7 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
         let count = 0;
         try {
           count = fs.readdirSync(fullPath).length;
-        } catch (e) {
+        } catch {
           count = 'unknown';
         }
         const desc = getDescription(metadata, newKey);
@@ -118,7 +107,6 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
       tree += `${indent}${prefix}${item}${desc ? ' - ' + desc : ''}\n`;
     }
     
-    // For top-level blocks, add an empty line after each item (except last) for clarity.
     if (indent === '' && !isLast) {
       tree += '\n';
     }
@@ -127,23 +115,16 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
 }
 
 /**
- * Writes the generated file tree to a specified output file.
- *
- * @param {string} baseDir - The base directory to generate the tree from.
- * @param {string} outputFile - The output file path where the tree will be written.
- * @param {object} [options={}] - Options for generation (e.g., { compressDirs: ["node_modules", ".git"] }).
- * @param {string} [metaPath='./description.json'] - Path to the metadata file.
+ * Writes the generated file tree to an output file.
  */
-function writeFileTree(baseDir, outputFile, options = {}, metaPath = './description.json') {
+export function writeFileTree(
+  baseDir,
+  outputFile,
+  options = {},
+  metaPath = './description.json'
+) {
   const metadata = loadMetadata(metaPath);
   const tree = generateFileTree(baseDir, options, '', metadata);
   fs.writeFileSync(outputFile, tree, 'utf8');
   console.log(`File tree generated at: ${outputFile}`);
 }
-
-module.exports = {
-  generateFileTree,
-  writeFileTree,
-  loadMetadata,
-  getDescription
-};

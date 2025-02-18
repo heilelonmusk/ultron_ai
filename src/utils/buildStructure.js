@@ -1,12 +1,10 @@
-// buildStructure.js
-const fs = require('fs');
-const path = require('path');
-const { createDirectory, createFile } = require('./fileManager');
+// src/utils/buildStructure.js
+import fs from 'fs';
+import path from 'path';
+import { createDirectory, createFile } from './fileManager.js';
 
 /**
  * Loads the structure configuration from 'structure.config.json'.
- * @returns {object} The parsed structure configuration object.
- * @throws Will exit the process if the configuration file is not found or cannot be parsed.
  */
 function loadStructureConfig() {
   const configPath = path.join(process.cwd(), 'structure.config.json');
@@ -25,8 +23,6 @@ function loadStructureConfig() {
 
 /**
  * Recursively creates directories and files based on the provided structure configuration.
- * @param {string} basePath - The base path where the structure should be created.
- * @param {object|Array} structure - The structure configuration object or array of file names.
  */
 function createStructure(basePath, structure) {
   if (Array.isArray(structure)) {
@@ -46,8 +42,8 @@ function createStructure(basePath, structure) {
 /**
  * Builds the repository structure based on the configuration defined in structure.config.json.
  */
-function buildRepositoryStructure() {
-  const baseDir = process.cwd(); // The current directory as repository root
+export function buildRepositoryStructure() {
+  const baseDir = process.cwd();
   console.log('Loading structure configuration from structure.config.json...');
   const structure = loadStructureConfig();
   console.log('Creating repository structure...');
@@ -55,4 +51,7 @@ function buildRepositoryStructure() {
   console.log('Structure successfully created!');
 }
 
-buildRepositoryStructure();
+// If you want it to run as a CLI:
+if (import.meta.url === process.argv[1] || import.meta.url === new URL(process.argv[1], 'file://').href) {
+  buildRepositoryStructure();
+}

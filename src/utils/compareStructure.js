@@ -1,15 +1,12 @@
 // src/utils/compareStructure.js
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Recursively scans a directory and returns an object representing its structure.
  * Directories become nested objects; files are represented as null.
- * @param {string} dirPath - The directory path to scan.
- * @param {string[]} [excludeDirs=[]] - List of directory names to exclude.
- * @returns {object} The structure object.
  */
-function generateStructureJson(dirPath, excludeDirs = []) {
+export function generateStructureJson(dirPath, excludeDirs = []) {
   const structure = {};
   let items;
   try {
@@ -19,12 +16,11 @@ function generateStructureJson(dirPath, excludeDirs = []) {
     return structure;
   }
   
-  // Sort items alphabetically (case-insensitive)
   items.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   
   items.forEach(item => {
     if (excludeDirs.map(d => d.toLowerCase()).includes(item.toLowerCase())) {
-      return; // Skip excluded directories
+      return;
     }
     const fullPath = path.join(dirPath, item);
     let stats;
@@ -45,10 +41,8 @@ function generateStructureJson(dirPath, excludeDirs = []) {
 
 /**
  * Reads the desired structure from structure.config.json.
- * @param {string} configPath - Path to the structure.config.json file.
- * @returns {object} The desired structure object.
  */
-function loadDesiredStructure(configPath) {
+export function loadDesiredStructure(configPath) {
   if (fs.existsSync(configPath)) {
     const rawData = fs.readFileSync(configPath, 'utf8');
     try {
@@ -64,18 +58,11 @@ function loadDesiredStructure(configPath) {
 }
 
 /**
- * Recursively compares two structure objects and returns the differences.
- * The differences are returned in an object containing:
- * - missing: elements present in the desired structure but missing in the current one.
- * - extra: elements present in the current structure but not in the desired one.
- * @param {object} desired - The desired structure.
- * @param {object} current - The current structure.
- * @returns {object} An object with "missing" and "extra" differences.
+ * Recursively compares two structure objects and returns differences.
  */
-function compareStructures(desired, current) {
+export function compareStructures(desired, current) {
   const diff = { missing: {}, extra: {} };
 
-  // Check for missing items in the current structure
   for (const key in desired) {
     if (!(key in current)) {
       diff.missing[key] = desired[key];
@@ -90,7 +77,6 @@ function compareStructures(desired, current) {
     }
   }
 
-  // Check for extra items in the current structure
   for (const key in current) {
     if (!(key in desired)) {
       diff.extra[key] = current[key];
@@ -106,13 +92,10 @@ function compareStructures(desired, current) {
 }
 
 /**
- * Compares the desired structure (from config) with the current structure (scanned from disk)
+ * Compares the desired structure (from config) with the current structure
  * and prints the differences.
- * @param {string} baseDir - The base directory to scan.
- * @param {string} configPath - The path to structure.config.json.
- * @param {string[]} [excludeDirs=[]] - Array of directory names to exclude from scanning.
  */
-function checkStructureDifferences(baseDir, configPath, excludeDirs = []) {
+export function checkStructureDifferences(baseDir, configPath, excludeDirs = []) {
   const desiredStructure = loadDesiredStructure(configPath);
   const currentStructure = generateStructureJson(baseDir, excludeDirs);
   const diff = compareStructures(desiredStructure, currentStructure);
@@ -123,20 +106,9 @@ function checkStructureDifferences(baseDir, configPath, excludeDirs = []) {
 
 /**
  * Saves the current structure of a directory to a JSON file.
- * @param {string} dirPath - The directory to scan.
- * @param {string} outputFile - The file where the structure will be saved.
- * @param {string[]} [excludeDirs=[]] - Array of directory names to exclude from scanning.
  */
-function saveStructure(dirPath, outputFile, excludeDirs = []) {
+export function saveStructure(dirPath, outputFile, excludeDirs = []) {
   const currentStructure = generateStructureJson(dirPath, excludeDirs);
   fs.writeFileSync(outputFile, JSON.stringify(currentStructure, null, 2), 'utf8');
   console.log(`Structure saved to: ${outputFile}`);
 }
-
-module.exports = {
-  generateStructureJson,
-  loadDesiredStructure,
-  compareStructures,
-  checkStructureDifferences,
-  saveStructure
-};

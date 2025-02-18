@@ -1,12 +1,11 @@
-// fileManager.js
-const fs = require('fs');
-const path = require('path');
+// src/utils/fileManager.js
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Creates a directory if it does not exist.
- * @param {string} dirPath - The path of the directory to create.
  */
-function createDirectory(dirPath) {
+export function createDirectory(dirPath) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
     console.log(`Directory created: ${dirPath}`);
@@ -14,11 +13,9 @@ function createDirectory(dirPath) {
 }
 
 /**
- * Creates a file with the given content if it does not exist.
- * @param {string} filePath - The path of the file to create.
- * @param {string} [content='// Placeholder'] - The content to write in the file.
+ * Creates a file with given content if it does not exist.
  */
-function createFile(filePath, content = '// Placeholder') {
+export function createFile(filePath, content = '// Placeholder') {
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, content, 'utf8');
     console.log(`File created: ${filePath}`);
@@ -26,22 +23,17 @@ function createFile(filePath, content = '// Placeholder') {
 }
 
 /**
- * Updates a file with the given content.
- * @param {string} filePath - The path of the file to update.
- * @param {string} content - The new content for the file.
- * @param {object} [options={ flag: 'w' }] - Write options (e.g., flag: 'a' for append).
+ * Updates a file with new content.
  */
-function updateFile(filePath, content, options = { flag: 'w' }) {
+export function updateFile(filePath, content, options = { flag: 'w' }) {
   fs.writeFileSync(filePath, content, options);
   console.log(`File updated: ${filePath}`);
 }
 
 /**
  * Renames a file from oldPath to newPath.
- * @param {string} oldPath - The current path of the file.
- * @param {string} newPath - The new desired path (or name) for the file.
  */
-function renameFile(oldPath, newPath) {
+export function renameFile(oldPath, newPath) {
   if (fs.existsSync(oldPath)) {
     fs.renameSync(oldPath, newPath);
     console.log(`File renamed from ${oldPath} to ${newPath}`);
@@ -52,10 +44,8 @@ function renameFile(oldPath, newPath) {
 
 /**
  * Copies a file from source to destination.
- * @param {string} source - The source file path.
- * @param {string} destination - The destination file path.
  */
-function copyFile(source, destination) {
+export function copyFile(source, destination) {
   if (fs.existsSync(source)) {
     fs.copyFileSync(source, destination);
     console.log(`File copied from ${source} to ${destination}`);
@@ -66,10 +56,8 @@ function copyFile(source, destination) {
 
 /**
  * Moves a file from source to destination.
- * @param {string} source - The source file path.
- * @param {string} destination - The destination file path.
  */
-function moveFile(source, destination) {
+export function moveFile(source, destination) {
   if (fs.existsSync(source)) {
     fs.renameSync(source, destination);
     console.log(`File moved from ${source} to ${destination}`);
@@ -77,12 +65,3 @@ function moveFile(source, destination) {
     console.error(`Cannot move: ${source} does not exist.`);
   }
 }
-
-module.exports = {
-  createDirectory,
-  createFile,
-  updateFile,
-  renameFile,
-  copyFile,
-  moveFile,
-};
