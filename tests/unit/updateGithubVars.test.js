@@ -8,7 +8,6 @@ describe('updateGithubVars', () => {
     // Imposta TUTTE le env necessarie per far sì che lo script non fallisca subito
     process.env.MY_GITHUB_OWNER = 'test-owner';
     process.env.MY_GITHUB_REPO = 'test-repo';
-    process.env.MY_GITHUB_SECRET_VALUE = 'secret_value';
     process.env.MY_GITHUB_TOKEN = 'test-token';
   });
 
