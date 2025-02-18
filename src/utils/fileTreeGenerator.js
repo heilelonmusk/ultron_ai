@@ -52,7 +52,7 @@ function getDescription(metadata, keyPath) {
  * @param {string} [indent=''] - The current indentation string.
  * @param {object} [metadata={}] - Metadata object for descriptions.
  * @param {string} [currentKey=''] - The current key path for metadata lookup.
- * @returns {string} The generated file tree as a string.
+ * @returns {string} The generated file tree as a plain text string.
  */
 function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, currentKey = '') {
   const { compressDirs = [] } = options;
@@ -67,9 +67,26 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
   // Sort items alphabetically (case-insensitive)
   items.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   
-  items.forEach((item, index) => {
+  // Separa le cartelle dai file per una migliore organizzazione
+  const directories = items.filter(item => {
+    try {
+      return fs.statSync(path.join(dirPath, item)).isDirectory();
+    } catch (e) {
+      return false;
+    }
+  });
+  const files = items.filter(item => {
+    try {
+      return !fs.statSync(path.join(dirPath, item)).isDirectory();
+    } catch (e) {
+      return false;
+    }
+  });
+  const sortedItems = directories.concat(files);
+  
+  sortedItems.forEach((item, index) => {
     const fullPath = path.join(dirPath, item);
-    const isLast = index === items.length - 1;
+    const isLast = index === sortedItems.length - 1;
     const prefix = isLast ? '└── ' : '├── ';
     let stats;
     try {
@@ -81,7 +98,6 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
     const newKey = currentKey ? `${currentKey}/${item}` : item;
     
     if (stats && stats.isDirectory()) {
-      // Check if this directory should be compressed (case-insensitive)
       if (compressDirs.map(dir => dir.toLowerCase()).includes(item.toLowerCase())) {
         let count = 0;
         try {
@@ -102,8 +118,7 @@ function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, cur
       tree += `${indent}${prefix}${item}${desc ? ' - ' + desc : ''}\n`;
     }
     
-    // Aggiungi una riga vuota solo se siamo al livello top-level (indent vuoto)
-    // e non è l'ultimo elemento.
+    // For top-level blocks, add an empty line after each item (except last) for clarity.
     if (indent === '' && !isLast) {
       tree += '\n';
     }

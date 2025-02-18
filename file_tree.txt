@@ -1,15 +1,9 @@
-├── .DS_Store
-
-├── .env
-
 ├── .git [13 items]
 
 ├── .github
 │   └── workflows
 │       ├── update_file_tree.yml
 │       └── update_variables.yml
-
-├── .gitignore
 
 ├── config - Contains configuration files like environment variables and service settings.
 │   ├── corsConfig.js
@@ -19,31 +13,17 @@
 │   ├── rateLimitConfig.js
 │   └── redisConfig.js
 
-├── description.json
-
 ├── docs - Holds all project documentation including README, developer notes, and troubleshooting guides.
 │   ├── AI_DEVELOPER_NOTES.md
 │   ├── project_meta.yaml
 │   ├── README.md
 │   └── TROUBLESHOOTING.md
 
-├── env.txt
-
-├── file_tree.txt
-
-├── LICENSE
-
 ├── logs - Log files for the application.
 
 ├── node_modules [98 items]
 
-├── package-lock.json
-
-├── package.json
-
 ├── public - Static assets like HTML, CSS, images, etc.
-
-├── README.md
 
 ├── scripts - Automation and maintenance scripts.
 │   ├── autoUpdateDescriptions.js
@@ -51,7 +31,6 @@
 │   └── updateNetlifyVars.js
 
 ├── src
-│   ├── .DS_Store
 │   ├── api - API endpoints, controllers, and services for the application.
 │   │   ├── controllers
 │   │   ├── routes
@@ -62,18 +41,39 @@
 │   │   ├── loggin
 │   │   └── nlp - Natural Language Processing modules.
 │   ├── ultron_chat - Module for the AI chatbot UI and interaction logic.
-│   └── utils - Utility modules for file management, tree generation, and structure bootstrapping.
-│       ├── buildStructure.js
-│       ├── fileManager.js
-│       ├── fileTreeGenerator.js
-│       └── updateDescriptions.js
-
-├── structure.config.json
+│   ├── utils - Utility modules for file management, tree generation, and structure bootstrapping.
+│   │   ├── buildStructure.js
+│   │   ├── fileManager.js
+│   │   ├── fileTreeGenerator.js
+│   │   └── updateDescriptions.js
+│   └── .DS_Store
 
 ├── tests
-│   ├── .DS_Store
 │   ├── integration - Integration tests for overall system functionality.
-│   └── unit - Unit tests for individual modules.
-│       └── fileManager.test.js
+│   ├── unit - Unit tests for individual modules.
+│   │   └── fileManager.test.js
+│   └── .DS_Store
+
+├── .DS_Store
+
+├── .env
+
+├── .gitignore
+
+├── description.json
+
+├── env.txt
+
+├── file_tree.txt
+
+├── LICENSE
+
+├── package-lock.json
+
+├── package.json
+
+├── README.md
+
+├── structure.config.json
 
 └── ultron_ai@1.0.0
