@@ -1,0 +1,35 @@
+name: Update Structure
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Esegue ogni ora; modifica la frequenza se necessario
+  workflow_dispatch:
+
+jobs:
+  update-structure:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compare Current Structure with Saved Structure
+        run: |
+          # Confronta la struttura attuale con quella salvata in structure.config.json
+          node -e "require('./src/utils/compareStructure').checkStructureDifferences(process.cwd(), 'structure.config.json', ['node_modules', '.git'])"
+
+      - name: Restore Missing Files and Directories
+        run: |
+          # Se vengono rilevate discrepanze, esegue lo script di build per ricreare la struttura
+          node -e "require('./src/utils/buildStructure')"

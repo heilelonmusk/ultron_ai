@@ -1,57 +1,35 @@
-name: Update File Tree
-
-permissions:
-  contents: write
+name: Update Tree
 
 on:
   push:
-    branches: 
+    branches:
       - main
-  # Alternatively, you can schedule it:
-  # schedule:
-  #   - cron: '0 * * * *'  # every hour
 
 jobs:
-  update-file-tree:
+  update-tree:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        # Fetch the full history to allow committing changes
-        fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Generate File Tree
-      run: |
-        node -e "require('./src/utils/fileTreeGenerator').writeFileTree(process.cwd(), 'file_tree.txt', { excludeDirs: ['node_modules'] }, './descriptions.json')"
+      - name: Update Structure Config with Placeholders
+        run: |
+          # Aggiorna structure.config.json salvando la struttura corrente con placeholder
+          node -e "require('./src/utils/compareStructure').saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])"
 
-    - name: Check for changes
-      id: git_diff
-      run: |
-        git config --local user.email "actions@github.com"
-        git config --local user.name "GitHub Actions"
-        if git diff --quiet; then
-        echo "changed=false" >> $GITHUB_OUTPUT
-        else
-        echo "changed=true" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Auto-update Descriptions
-      run: node scripts/autoUpdateDescriptions.js     
-
-    - name: Commit and Push changes
-      if: steps.git_diff.outputs.changed == 'true'
-      run: |
-        git add file_tree.txt
-        git commit -m "Auto-update file_tree.txt [CI]" || echo "No changes to commit"
-        git push origin HEAD:main
+      - name: Generate File Tree
+        run: |
+          # Genera file_tree.txt basandosi sulla configurazione aggiornata
+          node -e "require('./src/utils/fileTreeGenerator').writeFileTree(process.cwd(), 'file_tree.txt', { compressDirs: ['node_modules', '.git'] }, './description.json')"
