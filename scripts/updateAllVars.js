@@ -1,19 +1,22 @@
 // scripts/updateAllVars.js
-require('dotenv').config(); // Carica il file .env
+const fs = require('fs');
+const path = require('path');
+// Verifica se esiste un file .env nella directory corrente e caricalo
+if (fs.existsSync(path.join(process.cwd(), '.env'))) {
+  require('dotenv').config();
+}
 const config = require('../config/envConfig');
 
-// Importa i moduli di aggiornamento per ogni servizio
+// Importa le funzioni di aggiornamento per ogni servizio
 const { updateGithubSecret } = require('./updateGithubVars');
 const { updateNetlifyVars } = require('./updateNetlifyVars');
-// Puoi aggiungere altri aggiornamenti per altri servizi qui
-// const { updateAnotherService } = require('./updateAnotherService');
+// Altri aggiornamenti possono essere aggiunti qui
 
 /**
- * Updates environment variables on all services based on the current .env configuration.
+ * Updates environment variables on all services based on the current configuration.
  */
 async function updateAllVars() {
   try {
-    // Controlla se la variabile di flag è impostata (opzionale)
     if (process.env.UPDATE_GITHUB_VARS === 'true') {
       console.log('Updating GitHub variables...');
       await updateGithubSecret();
@@ -22,11 +25,6 @@ async function updateAllVars() {
       console.log('Updating Netlify variables...');
       await updateNetlifyVars();
     }
-    // Esempio per altri servizi:
-    // if (process.env.UPDATE_ANOTHER_SERVICE === 'true') {
-    //   console.log('Updating Another Service variables...');
-    //   await updateAnotherService();
-    // }
     console.log('All variable updates completed successfully.');
   } catch (error) {
     console.error('Error updating variables:', error);
