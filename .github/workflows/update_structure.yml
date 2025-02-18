@@ -1,5 +1,9 @@
 name: Update Structure
 
+env:
+  MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+  MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
+
 on:
   schedule:
     - cron: '0 * * * *'  # Esegue ogni ora; modifica la frequenza se necessario

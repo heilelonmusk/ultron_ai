@@ -20,6 +20,7 @@ jobs:
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+      MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
       # Flag per aggiornare i vari servizi automaticamente
       UPDATE_GITHUB_VARS: "true"
       UPDATE_NETLIFY_VARS: "true"
