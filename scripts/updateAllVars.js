@@ -1,54 +1,49 @@
 // scripts/updateAllVars.js
-import 'dotenv/config'; // Opzionale, se vuoi che legga variabili da .env
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-// Se vuoi ottenere il current working dir di questo file
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-let cwd;
-try {
-  cwd = process.cwd();
-} catch (error) {
-  cwd = __dirname;
-}
-
-// Carica .env manualmente se vuoi
-if (fs.existsSync(path.join(cwd, '.env'))) {
-  // Non possiamo usare require('dotenv').config() in ESM, ma puoi importare 'dotenv/config'
-  // Oppure: import dotenv from 'dotenv'; dotenv.config({ path: path.join(cwd, '.env') });
-}
-
-// Esempio di import config (dipende da come l’hai convertito)
-import config from '../config/envConfig.js';
-
-// Import the update scripts
-import { updateGithubSecret } from './updateGithubVars.js';
-import { updateNetlifyVars } from './updateNetlifyVars.js';
-// More updates here if needed...
+import 'dotenv/config'; // Carica .env se desideri
 
 /**
- * Updates environment variables on all services based on the current configuration.
+ * Invece di importare direttamente updateGithubSecret e updateNetlifyVars,
+ * creiamo una factory che li riceve come parametri in un oggetto.
+ *
+ * @param {Object} deps - Oggetto con { updateGithubSecret, updateNetlifyVars }
+ * @returns {Function} updateAllVars - la funzione che aggiorna le var su GH e Netlify
  */
-export async function updateAllVars() {
-  try {
-    if (process.env.UPDATE_GITHUB_VARS === 'true') {
-      console.log('Updating GitHub variables...');
-      await updateGithubSecret();
+export function makeUpdateAllVars({ updateGithubSecret, updateNetlifyVars }) {
+  return async function updateAllVars() {
+    try {
+      if (process.env.UPDATE_GITHUB_VARS === 'true') {
+        console.log('Updating GitHub variables...');
+        await updateGithubSecret();
+      }
+      if (process.env.UPDATE_NETLIFY_VARS === 'true') {
+        console.log('Updating Netlify variables...');
+        await updateNetlifyVars();
+      }
+      console.log('All variable updates completed successfully.');
+    } catch (error) {
+      console.error('Error updating variables:', error);
+      process.exit(1);
     }
-    if (process.env.UPDATE_NETLIFY_VARS === 'true') {
-      console.log('Updating Netlify variables...');
-      await updateNetlifyVars();
-    }
-    console.log('All variable updates completed successfully.');
-  } catch (error) {
-    console.error('Error updating variables:', error);
-    process.exit(1);
-  }
+  };
 }
 
-// If run directly from CLI
-if (import.meta.url === process.argv[1] || import.meta.url === new URL(process.argv[1], 'file://').href) {
-  updateAllVars();
-}
+/**
+ * Se vuoi comunque un'istanza "reale" per l'esecuzione in produzione, puoi
+ * importare *qui* i moduli updateGithubSecret e updateNetlifyVars, e creare
+ * un'istanza "ufficiale". Per esempio:
+ *
+ * import { updateGithubSecret } from './updateGithubVars.js';
+ * import { updateNetlifyVars } from './updateNetlifyVars.js';
+ *
+ * // export const updateAllVars = makeUpdateAllVars({
+ * //   updateGithubSecret,
+ * //   updateNetlifyVars
+ * // });
+ *
+ * // if (import.meta.url === process.argv[1] || new URL(process.argv[1], 'file://').href) {
+ * //   updateAllVars();
+ * // }
+ *
+ * Oppure spostare questo "assemblaggio" in un file "indexOfUpdates.js"
+ * separato, se preferisci.
+ */
