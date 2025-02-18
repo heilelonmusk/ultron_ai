@@ -14,11 +14,10 @@ async function updateGithubSecret() {
   const { Octokit } = await import('@octokit/rest');
   const tweetsodium = await import('tweetsodium');
 
-  const owner = process.env.GITHUB_OWNER;
-  const repo = process.env.GITHUB_REPO;
+  const owner = process.env.MY_GITHUB_OWNER;
+  const repo = process.env.MY_GITHUB_REPO;
   const secretName = 'MY_GITHUB_SECRET';
-  const secretValue = process.env.MY_GITHUB_SECRET_VALUE;
-  const githubToken = process.env.GITHUB_TOKEN;
+  const githubToken = process.env.MY_GITHUB_TOKEN;
 
   if (!owner || !repo || !secretValue || !githubToken) {
     throw new Error('Missing required environment variables.');
