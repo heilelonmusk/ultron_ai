@@ -1,18 +1,19 @@
 // scripts/updateGithubVars.js
-const { Octokit } = require('@octokit/rest');
-const sodium = require('tweetsodium');
-
 /**
  * Updates a GitHub secret (MY_GITHUB_SECRET) for the repository.
  * Reads the following environment variables:
- * - GITHUB_OWNER: Repository owner (e.g., 'test-owner')
- * - GITHUB_REPO: Repository name (e.g., 'test-repo')
- * - MY_GITHUB_SECRET_VALUE: The new secret value to set
- * - GITHUB_TOKEN: A token with appropriate repository permissions
+ *   - GITHUB_OWNER: Repository owner (e.g., 'test-owner')
+ *   - GITHUB_REPO: Repository name (e.g., 'test-repo')
+ *   - MY_GITHUB_SECRET_VALUE: The new secret value to set
+ *   - GITHUB_TOKEN: A token with appropriate repository permissions
  *
  * @returns {Promise<void>}
  */
 async function updateGithubSecret() {
+  // Use dynamic imports per module
+  const { Octokit } = await import('@octokit/rest');
+  const tweetsodium = await import('tweetsodium');
+
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
   const secretName = 'MY_GITHUB_SECRET';
@@ -34,10 +35,10 @@ async function updateGithubSecret() {
   const publicKey = publicKeyData.key;
   const keyId = publicKeyData.key_id;
 
-  // Encrypt the secret value using tweetsodium
+  // Encrypt the secret value using tweetsodium.seal
   const messageBytes = Buffer.from(secretValue);
   const keyBytes = Buffer.from(publicKey, 'base64');
-  const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+  const encryptedBytes = tweetsodium.seal(messageBytes, keyBytes);
   const encryptedValue = Buffer.from(encryptedBytes).toString('base64');
 
   // Create or update the secret on GitHub
@@ -52,9 +53,9 @@ async function updateGithubSecret() {
   console.log(`Secret "${secretName}" updated successfully.`);
 }
 
-// If executed directly, run the update
+// Se il modulo viene eseguito direttamente, esegui la funzione
 if (require.main === module) {
-  updateGithubSecret().catch((err) => {
+  updateGithubSecret().catch(err => {
     console.error(err);
     process.exit(1);
   });
