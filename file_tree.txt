@@ -3,6 +3,7 @@
 ├── .github
 │   └── workflows
 │       ├── update_file_tree.yml
+│       ├── update_structure.yml
 │       └── update_variables.yml
 
 ├── config - Contains configuration files like environment variables and service settings.
@@ -21,7 +22,7 @@
 
 ├── logs - Log files for the application.
 
-├── node_modules [98 items]
+├── node_modules [102 items]
 
 ├── public - Static assets like HTML, CSS, images, etc.
 
@@ -43,6 +44,7 @@
 │   ├── ultron_chat - Module for the AI chatbot UI and interaction logic.
 │   ├── utils - Utility modules for file management, tree generation, and structure bootstrapping.
 │   │   ├── buildStructure.js
+│   │   ├── compareStructure.js
 │   │   ├── fileManager.js
 │   │   ├── fileTreeGenerator.js
 │   │   └── updateDescriptions.js
@@ -51,7 +53,9 @@
 ├── tests
 │   ├── integration - Integration tests for overall system functionality.
 │   ├── unit - Unit tests for individual modules.
-│   │   └── fileManager.test.js
+│   │   ├── compareStructure.test.js
+│   │   ├── fileManager.test.js
+│   │   └── fileTreeGenerator.test.js
 │   └── .DS_Store
 
 ├── .DS_Store

@@ -1,32 +1,73 @@
 {
-  "config": [
-    "envConfig.js",
-    "mongooseConfig.js",
-    "redisConfig.js",
-    "netlifyConfig.js",
-    "rateLimitConfig.js",
-    "corsConfig.js"
-  ],
-  "docs": [
-    "README.md",
-    "AI_DEVELOPER_NOTES.md",
-    "TROUBLESHOOTING.md",
-    "project_meta.yaml"
-  ],
+  ".DS_Store": null,
+  ".env": null,
+  ".github": {
+    "workflows": {
+      "update_file_tree.yml": null,
+      "update_structure.yml": null,
+      "update_variables.yml": null
+    }
+  },
+  ".gitignore": null,
+  "config": {
+    "corsConfig.js": null,
+    "envConfig.js": null,
+    "mongooseConfig.js": null,
+    "netlifyConfig.js": null,
+    "rateLimitConfig.js": null,
+    "redisConfig.js": null
+  },
+  "description.json": null,
+  "docs": {
+    "AI_DEVELOPER_NOTES.md": null,
+    "project_meta.yaml": null,
+    "README.md": null,
+    "TROUBLESHOOTING.md": null
+  },
+  "env.txt": null,
+  "file_tree.txt": null,
+  "LICENSE": null,
+  "logs": {},
+  "package-lock.json": null,
+  "package.json": null,
+  "public": {},
+  "README.md": null,
+  "scripts": {
+    "autoUpdateDescriptions.js": null,
+    "envManager.js": null,
+    "updateNetlifyVars.js": null
+  },
   "src": {
-    "utils": [
-      "fileManager.js",
-      "fileTreeGenerator.js",
-      "buildStructure.js"
-    ]
+    ".DS_Store": null,
+    "api": {
+      "controllers": {},
+      "routes": {},
+      "services": {}
+    },
+    "iframe": {},
+    "modules": {
+      "intent": {},
+      "loggin": {},
+      "nlp": {}
+    },
+    "ultron_chat": {},
+    "utils": {
+      "buildStructure.js": null,
+      "compareStructure.js": null,
+      "fileManager.js": null,
+      "fileTreeGenerator.js": null,
+      "updateDescriptions.js": null
+    }
   },
+  "structure.config.json": null,
   "tests": {
-    "unit": [
-      "fileManager.test.js"
-    ]
+    ".DS_Store": null,
+    "integration": {},
+    "unit": {
+      "compareStructure.test.js": null,
+      "fileManager.test.js": null,
+      "fileTreeGenerator.test.js": null
+    }
   },
-  "root": [
-    "structure.config.json",
-    "package.json"
-  ]
+  "ultron_ai@1.0.0": null
 }
