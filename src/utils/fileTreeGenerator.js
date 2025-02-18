@@ -48,7 +48,7 @@ function getDescription(metadata, keyPath) {
  *
  * @param {string} dirPath - The directory to generate the tree from.
  * @param {object} options - Options for generation.
- * @param {string[]} [options.compressDirs=[]] - Array of directory names to compress (case-insensitive, e.g. ["node_modules"]).
+ * @param {string[]} [options.compressDirs=[]] - Array of directory names to compress (case-insensitive).
  * @param {string} [options.indent=''] - The current indentation string.
  * @param {object} [metadata={}] - Metadata object for descriptions.
  * @param {string} [currentKey=''] - The current key path for metadata lookup.
@@ -77,10 +77,11 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
     } catch (error) {
       stats = null;
     }
+    // Build the metadata key for this item.
     const newKey = currentKey ? `${currentKey}/${item}` : item;
     
     if (stats && stats.isDirectory()) {
-      // Se la directory è tra quelle da comprimere (es. node_modules)
+      // Check if this directory should be compressed (case-insensitive)
       if (compressDirs.map(dir => dir.toLowerCase()).includes(item.toLowerCase())) {
         let count = 0;
         try {
@@ -95,6 +96,10 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
         tree += `${indent}${prefix}${item}${desc ? ' - ' + desc : ''}\n`;
         const newIndent = indent + (isLast ? '    ' : '│   ');
         tree += generateFileTree(fullPath, options, metadata, newKey);
+        // Aggiungi una linea orizzontale al termine del blocco della directory, se ci sono figli.
+        if (items.length > 0) {
+          tree += `${indent}----------------\n`;
+        }
       }
     } else {
       const desc = getDescription(metadata, newKey);
