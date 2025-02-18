@@ -1,80 +1,79 @@
 ├── .DS_Store
+
 ├── .env
+
 ├── .git [13 items]
+
 ├── .github
-└── workflows
-├── update_file_tree.yml
-└── update_variables.yml
-----------------
-----------------
+│   └── workflows
+│       ├── update_file_tree.yml
+│       └── update_variables.yml
+
 ├── .gitignore
+
 ├── config - Contains configuration files like environment variables and service settings.
-├── corsConfig.js
-├── envConfig.js
-├── mongooseConfig.js
-├── netlifyConfig.js
-├── rateLimitConfig.js
-└── redisConfig.js
-----------------
+│   ├── corsConfig.js
+│   ├── envConfig.js
+│   ├── mongooseConfig.js
+│   ├── netlifyConfig.js
+│   ├── rateLimitConfig.js
+│   └── redisConfig.js
+
 ├── description.json
+
 ├── docs - Holds all project documentation including README, developer notes, and troubleshooting guides.
-├── AI_DEVELOPER_NOTES.md
-├── project_meta.yaml
-├── README.md
-└── TROUBLESHOOTING.md
-----------------
+│   ├── AI_DEVELOPER_NOTES.md
+│   ├── project_meta.yaml
+│   ├── README.md
+│   └── TROUBLESHOOTING.md
+
 ├── env.txt
+
 ├── file_tree.txt
+
 ├── LICENSE
+
 ├── logs - Log files for the application.
-----------------
+
 ├── node_modules [98 items]
+
 ├── package-lock.json
+
 ├── package.json
+
 ├── public - Static assets like HTML, CSS, images, etc.
-----------------
+
 ├── README.md
+
 ├── scripts - Automation and maintenance scripts.
-├── autoUpdateDescriptions.js
-├── envManager.js
-└── updateNetlifyVars.js
-----------------
+│   ├── autoUpdateDescriptions.js
+│   ├── envManager.js
+│   └── updateNetlifyVars.js
+
 ├── src
-├── .DS_Store
-├── api - API endpoints, controllers, and services for the application.
-├── controllers
-----------------
-├── routes
-----------------
-└── services
-----------------
-----------------
-├── iframe - Module for blockchain-based airdrop verification.
-----------------
-├── modules
-├── intent - Intent recognition modules.
-----------------
-├── loggin
-----------------
-└── nlp - Natural Language Processing modules.
-----------------
-----------------
-├── ultron_chat - Module for the AI chatbot UI and interaction logic.
-----------------
-└── utils - Utility modules for file management, tree generation, and structure bootstrapping.
-├── buildStructure.js
-├── fileManager.js
-├── fileTreeGenerator.js
-└── updateDescriptions.js
-----------------
-----------------
+│   ├── .DS_Store
+│   ├── api - API endpoints, controllers, and services for the application.
+│   │   ├── controllers
+│   │   ├── routes
+│   │   └── services
+│   ├── iframe - Module for blockchain-based airdrop verification.
+│   ├── modules
+│   │   ├── intent - Intent recognition modules.
+│   │   ├── loggin
+│   │   └── nlp - Natural Language Processing modules.
+│   ├── ultron_chat - Module for the AI chatbot UI and interaction logic.
+│   └── utils - Utility modules for file management, tree generation, and structure bootstrapping.
+│       ├── buildStructure.js
+│       ├── fileManager.js
+│       ├── fileTreeGenerator.js
+│       └── updateDescriptions.js
+
 ├── structure.config.json
+
 ├── tests
-├── .DS_Store
-├── integration - Integration tests for overall system functionality.
-----------------
-└── unit - Unit tests for individual modules.
-└── fileManager.test.js
-----------------
-----------------
+│   ├── .DS_Store
+│   ├── integration - Integration tests for overall system functionality.
+│   └── unit - Unit tests for individual modules.
+│       └── fileManager.test.js
+
 └── ultron_ai@1.0.0

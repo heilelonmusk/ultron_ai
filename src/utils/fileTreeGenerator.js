@@ -49,13 +49,13 @@ function getDescription(metadata, keyPath) {
  * @param {string} dirPath - The directory to generate the tree from.
  * @param {object} options - Options for generation.
  * @param {string[]} [options.compressDirs=[]] - Array of directory names to compress (case-insensitive).
- * @param {string} [options.indent=''] - The current indentation string.
+ * @param {string} [indent=''] - The current indentation string.
  * @param {object} [metadata={}] - Metadata object for descriptions.
  * @param {string} [currentKey=''] - The current key path for metadata lookup.
  * @returns {string} The generated file tree as a string.
  */
-function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '') {
-  const { compressDirs = [], indent = '' } = options;
+function generateFileTree(dirPath, options = {}, indent = '', metadata = {}, currentKey = '') {
+  const { compressDirs = [] } = options;
   let tree = '';
   let items;
   try {
@@ -95,15 +95,17 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
         const desc = getDescription(metadata, newKey);
         tree += `${indent}${prefix}${item}${desc ? ' - ' + desc : ''}\n`;
         const newIndent = indent + (isLast ? '    ' : '│   ');
-        tree += generateFileTree(fullPath, options, metadata, newKey);
-        // Aggiungi una linea orizzontale al termine del blocco della directory, se ci sono figli.
-        if (items.length > 0) {
-          tree += `${indent}----------------\n`;
-        }
+        tree += generateFileTree(fullPath, options, newIndent, metadata, newKey);
       }
     } else {
       const desc = getDescription(metadata, newKey);
       tree += `${indent}${prefix}${item}${desc ? ' - ' + desc : ''}\n`;
+    }
+    
+    // Aggiungi una riga vuota solo se siamo al livello top-level (indent vuoto)
+    // e non è l'ultimo elemento.
+    if (indent === '' && !isLast) {
+      tree += '\n';
     }
   });
   return tree;
@@ -119,7 +121,7 @@ function generateFileTree(dirPath, options = {}, metadata = {}, currentKey = '')
  */
 function writeFileTree(baseDir, outputFile, options = {}, metaPath = './description.json') {
   const metadata = loadMetadata(metaPath);
-  const tree = generateFileTree(baseDir, options, metadata);
+  const tree = generateFileTree(baseDir, options, '', metadata);
   fs.writeFileSync(outputFile, tree, 'utf8');
   console.log(`File tree generated at: ${outputFile}`);
 }
