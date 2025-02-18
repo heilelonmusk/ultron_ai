@@ -50,9 +50,39 @@ function renameFile(oldPath, newPath) {
   }
 }
 
+/**
+ * Copies a file from source to destination.
+ * @param {string} source - The source file path.
+ * @param {string} destination - The destination file path.
+ */
+function copyFile(source, destination) {
+  if (fs.existsSync(source)) {
+    fs.copyFileSync(source, destination);
+    console.log(`File copied from ${source} to ${destination}`);
+  } else {
+    console.error(`Cannot copy: ${source} does not exist.`);
+  }
+}
+
+/**
+ * Moves a file from source to destination.
+ * @param {string} source - The source file path.
+ * @param {string} destination - The destination file path.
+ */
+function moveFile(source, destination) {
+  if (fs.existsSync(source)) {
+    fs.renameSync(source, destination);
+    console.log(`File moved from ${source} to ${destination}`);
+  } else {
+    console.error(`Cannot move: ${source} does not exist.`);
+  }
+}
+
 module.exports = {
   createDirectory,
   createFile,
   updateFile,
   renameFile,
+  copyFile,
+  moveFile,
 };

@@ -46,6 +46,9 @@ jobs:
         echo "changed=true" >> $GITHUB_OUTPUT
         fi
 
+    - name: Auto-update Descriptions
+      run: node scripts/autoUpdateDescriptions.js     
+
     - name: Commit and Push changes
       if: steps.git_diff.outputs.changed == 'true'
       run: |

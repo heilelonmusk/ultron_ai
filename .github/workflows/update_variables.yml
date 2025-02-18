@@ -1,0 +1,49 @@
+name: Update Variables and Netlify Settings
+
+# This workflow runs on every push to main and on a schedule.
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  update-variables:
+    runs-on: ubuntu-latest
+
+    env:
+      # Inject the necessary secrets as environment variables
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update Netlify Variables
+        run: node scripts/updateNetlifyVars.js
+
+      # Optional: Commit and push any changes if your script makes local modifications.
+      # Uncomment the following step if needed.
+      #- name: Commit and Push changes
+      #  run: |
+      #    git config --local user.email "actions@github.com"
+      #    git config --local user.name "GitHub Actions"
+      #    git add .
+      #    git commit -m "Auto-update variables via CI" || echo "No changes to commit"
+      #    git push origin HEAD:main

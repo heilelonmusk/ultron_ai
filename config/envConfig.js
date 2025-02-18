@@ -5,10 +5,10 @@ require('dotenv').config();
  * It uses process.env and provides default values when necessary.
  */
 const config = {
-    mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/mydb',
+    mongoUri: process.env.MONGO_URI || '',
     redis: {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: process.env.REDIS_PORT || 6379,
+      host: process.env.REDIS_HOST || '',
+      port: process.env.REDIS_PORT || '',
       password: process.env.REDIS_PASSWORD || ''
     },
     githubToken: process.env.MY_GITHUB_TOKEN || '',
