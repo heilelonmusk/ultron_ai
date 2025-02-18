@@ -8,10 +8,9 @@ import nock from 'nock';
 import { updateGithubSecret } from '../../scripts/updateGithubVars.js';
 
 // Setup environment variables needed for the test
-process.env.GITHUB_OWNER = 'test-owner';
-process.env.GITHUB_REPO = 'test-repo';
-process.env.MY_GITHUB_SECRET_VALUE = 'secret_value';
-process.env.GITHUB_TOKEN = 'test-token';
+process.env.MY_GITHUB_OWNER = 'test-owner';
+process.env.MY_GITHUB_REPO = 'test-repo';
+process.env.MY_GITHUB_TOKEN = 'test-token';
 
 describe('updateGithubVars', function () {
   afterEach(() => nock.cleanAll());

@@ -22,11 +22,10 @@ export async function updateGithubSecret() {
   const repo = process.env.MY_GITHUB_REPO;
   const secretName = 'MY_GITHUB_TOKEN';
   const githubToken = process.env.MY_GITHUB_TOKEN;
-  // Qui correzione: la variabile effettiva del segreto
-  const secretValue = process.env.MY_GITHUB_SECRET_VALUE;
+
 
   if (!owner || !repo || !secretValue || !githubToken) {
-    throw new Error('Missing required environment variables (MY_GITHUB_OWNER, MY_GITHUB_REPO, MY_GITHUB_SECRET_VALUE, MY_GITHUB_TOKEN).');
+    throw new Error('Missing required environment variables (MY_GITHUB_OWNER, MY_GITHUB_REPO, MY_GITHUB_TOKEN).');
   }
 
   // Create Octokit instance
