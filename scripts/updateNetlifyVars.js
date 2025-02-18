@@ -1,32 +1,46 @@
 // scripts/updateNetlifyVars.js
-require('dotenv').config();
 const fetch = require('node-fetch');
+const config = require('../config/envConfig'); // Se usi un modulo di config per le variabili
 
-const NETLIFY_API_URL = `https://api.netlify.com/api/v1/sites/${process.env.NETLIFY_SITE_ID}/env`;
-const NETLIFY_TOKEN = process.env.NETLIFY_AUTH_TOKEN; // Da salvare nei GitHub Secrets
+/**
+ * Updates a Netlify environment variable (example: MONGO_URI).
+ * @returns {Promise<void>}
+ */
+async function updateNetlifyVars() {
+  const netlifySiteId = process.env.NETLIFY_SITE_ID || config.netlifySiteId;
+  const netlifyAuthToken = process.env.NETLIFY_AUTH_TOKEN || config.netlifyAuthToken;
+  const mongoUri = process.env.MONGO_URI || config.mongoUri;
 
-const envVars = {
-  MONGO_URI: process.env.MONGO_URI,
-  REDIS_HOST: process.env.REDIS_HOST,
-  REDIS_PORT: process.env.REDIS_PORT,
-  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
-  MY_GITHUB_TOKEN: process.env.MY_GITHUB_TOKEN,
-  NETLIFY_SITE_ID: process.env.NETLIFY_SITE_ID
-};
-
-async function updateNetlifyEnv() {
-  for (const [key, value] of Object.entries(envVars)) {
-    console.log(`Updating ${key}...`);
-    await fetch(`${NETLIFY_API_URL}/${key}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${NETLIFY_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ value })
-    });
+  if (!netlifySiteId || !netlifyAuthToken) {
+    throw new Error('Netlify site ID or auth token is missing.');
   }
-  console.log('Netlify variables updated.');
+
+  // Endpoint di esempio per aggiornare la variabile MONGO_URI su Netlify
+  const apiUrl = `https://api.netlify.com/api/v1/sites/${netlifySiteId}/env/MONGO_URI`;
+
+  const response = await fetch(apiUrl, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${netlifyAuthToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ value: mongoUri })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Netlify API responded with ${response.status}`);
+  }
+
+  console.log('Netlify variables updated successfully.');
 }
 
-updateNetlifyEnv();
+// Se il modulo viene eseguito direttamente, esegue la funzione
+if (require.main === module) {
+  updateNetlifyVars().catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
+}
+
+// Esporta la funzione per i test ed eventuali altri moduli
+module.exports = { updateNetlifyVars };
