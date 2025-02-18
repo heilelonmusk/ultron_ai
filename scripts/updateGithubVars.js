@@ -1,57 +1,63 @@
+// scripts/updateGithubVars.js
+const { Octokit } = require('@octokit/rest');
+const sodium = require('tweetsodium');
+
 /**
- * @file updateGithubVars.test.js
- * @description Unit tests for the updateGithubVars function using nock to simulate GitHub API.
+ * Updates a GitHub secret (MY_GITHUB_SECRET) for the repository.
+ * Reads the following environment variables:
+ * - GITHUB_OWNER: Repository owner (e.g., 'test-owner')
+ * - GITHUB_REPO: Repository name (e.g., 'test-repo')
+ * - MY_GITHUB_SECRET_VALUE: The new secret value to set
+ * - GITHUB_TOKEN: A token with appropriate repository permissions
+ *
+ * @returns {Promise<void>}
  */
+async function updateGithubSecret() {
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const secretName = 'MY_GITHUB_SECRET';
+  const secretValue = process.env.MY_GITHUB_SECRET_VALUE;
+  const githubToken = process.env.GITHUB_TOKEN;
 
-const { expect } = require('chai');
-const nock = require('nock');
-const { updateGithubSecret } = require('../../scripts/updateGithubVars');
+  if (!owner || !repo || !secretValue || !githubToken) {
+    throw new Error('Missing required environment variables.');
+  }
 
-// Imposta le variabili d'ambiente necessarie per il test
-process.env.GITHUB_OWNER = 'test-owner';
-process.env.GITHUB_REPO = 'test-repo';
-process.env.MY_GITHUB_SECRET_VALUE = 'secret_value';
-process.env.GITHUB_TOKEN = 'test-token';
+  // Create an Octokit instance
+  const octokit = new Octokit({ auth: githubToken });
 
-describe('updateGithubVars', function () {
-  afterEach(() => nock.cleanAll());
+  // Retrieve the repository public key for secrets
+  const { data: publicKeyData } = await octokit.actions.getRepoPublicKey({
+    owner,
+    repo,
+  });
+  const publicKey = publicKeyData.key;
+  const keyId = publicKeyData.key_id;
 
-  it('should update GitHub secret successfully', async function () {
-    // Genera una chiave pubblica valida di 32 bytes
-    const validPublicKey = Buffer.alloc(32).toString('base64');
-    const publicKeyResponse = {
-      key: validPublicKey,
-      key_id: 'key123'
-    };
+  // Encrypt the secret value using tweetsodium
+  const messageBytes = Buffer.from(secretValue);
+  const keyBytes = Buffer.from(publicKey, 'base64');
+  const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+  const encryptedValue = Buffer.from(encryptedBytes).toString('base64');
 
-    const scope = nock('https://api.github.com')
-      .get(`/repos/test-owner/test-repo/actions/secrets/public-key`)
-      .reply(200, publicKeyResponse)
-      .put(`/repos/test-owner/test-repo/actions/secrets/MY_GITHUB_SECRET`, (body) => {
-        return body.key_id === 'key123' && typeof body.encrypted_value === 'string' && body.encrypted_value.length > 0;
-      })
-      .reply(200, {});
-
-    await updateGithubSecret();
-    expect(scope.isDone()).to.be.true;
+  // Create or update the secret on GitHub
+  await octokit.actions.createOrUpdateRepoSecret({
+    owner,
+    repo,
+    secret_name: secretName,
+    encrypted_value: encryptedValue,
+    key_id: keyId,
   });
 
-  it('should throw an error if GitHub API responds with an error', async function () {
-    const validPublicKey = Buffer.alloc(32).toString('base64');
-    nock('https://api.github.com')
-      .get(`/repos/test-owner/test-repo/actions/secrets/public-key`)
-      .reply(200, {
-        key: validPublicKey,
-        key_id: 'key123'
-      })
-      .put(`/repos/test-owner/test-repo/actions/secrets/MY_GITHUB_SECRET`)
-      .reply(400, { error: 'Bad Request' });
+  console.log(`Secret "${secretName}" updated successfully.`);
+}
 
-    try {
-      await updateGithubSecret();
-      throw new Error('Test should have failed');
-    } catch (error) {
-      expect(error.message).to.match(/400|Bad Request/);
-    }
+// If executed directly, run the update
+if (require.main === module) {
+  updateGithubSecret().catch((err) => {
+    console.error(err);
+    process.exit(1);
   });
-});
+}
+
+module.exports = { updateGithubSecret };

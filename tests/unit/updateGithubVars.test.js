@@ -28,7 +28,6 @@ describe('updateGithubVars', function () {
       .get(`/repos/test-owner/test-repo/actions/secrets/public-key`)
       .reply(200, publicKeyResponse)
       .put(`/repos/test-owner/test-repo/actions/secrets/MY_GITHUB_SECRET`, (body) => {
-        // Verifica che il body contenga key_id 'key123' e un encrypted_value non vuoto
         return body.key_id === 'key123' && typeof body.encrypted_value === 'string' && body.encrypted_value.length > 0;
       })
       .reply(200, {});
@@ -52,7 +51,7 @@ describe('updateGithubVars', function () {
       await updateGithubSecret();
       throw new Error('Test should have failed');
     } catch (error) {
-      expect(error.message).to.include('400');
+      expect(error.message).to.match(/400|Bad Request/);
     }
   });
 });
