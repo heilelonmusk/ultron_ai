@@ -2,66 +2,66 @@
 /**
  * Updates a GitHub secret (MY_GITHUB_SECRET) for the repository.
  * Reads the following environment variables:
- *   - GITHUB_OWNER: Repository owner (e.g., 'test-owner')
- *   - GITHUB_REPO: Repository name (e.g., 'test-repo')
+ *   - MY_GITHUB_OWNER: Repository owner (e.g., 'test-owner')
+ *   - MY_GITHUB_REPO: Repository name (e.g., 'test-repo')
  *   - MY_GITHUB_SECRET_VALUE: The new secret value to set
- *   - GITHUB_TOKEN: A token with appropriate repository permissions
+ *   - MY_GITHUB_TOKEN: A token with appropriate repository permissions
  *
  * @returns {Promise<void>}
  */
- 
+
+import 'dotenv/config'; // Se vuoi caricare .env qui
 import { Octokit } from '@octokit/rest';
 import tweetsodiumModule from 'tweetsodium';
 
-async function updateGithubSecret() {
-  // Ottieni la funzione 'seal' dal default export di tweetsodiumModule
+export async function updateGithubSecret() {
+  // Extract the 'seal' function from tweetsodium default
   const { default: seal } = tweetsodiumModule;
 
   const owner = process.env.MY_GITHUB_OWNER;
   const repo = process.env.MY_GITHUB_REPO;
   const secretName = 'MY_GITHUB_TOKEN';
   const githubToken = process.env.MY_GITHUB_TOKEN;
-  const url = process.env.MY_GITHUB_URL;
+  // Qui correzione: la variabile effettiva del segreto
+  const secretValue = process.env.MY_GITHUB_SECRET_VALUE;
 
   if (!owner || !repo || !secretValue || !githubToken) {
-    throw new Error('Missing required environment variables.');
+    throw new Error('Missing required environment variables (MY_GITHUB_OWNER, MY_GITHUB_REPO, MY_GITHUB_SECRET_VALUE, MY_GITHUB_TOKEN).');
   }
 
-  // Crea un'istanza di Octokit
+  // Create Octokit instance
   const octokit = new Octokit({ auth: githubToken });
 
-  // Recupera la chiave pubblica per le secret del repository
+  // Get the repository’s public key
   const { data: publicKeyData } = await octokit.actions.getRepoPublicKey({
     owner,
-    repo,
+    repo
   });
   const publicKey = publicKeyData.key;
   const keyId = publicKeyData.key_id;
 
-  // Cifra il valore della secret usando la funzione 'seal'
+  // Encrypt the secret value using 'seal'
   const messageBytes = Buffer.from(secretValue);
   const keyBytes = Buffer.from(publicKey, 'base64');
   const encryptedBytes = seal(messageBytes, keyBytes);
   const encryptedValue = Buffer.from(encryptedBytes).toString('base64');
 
-  // Crea o aggiorna la secret sul repository GitHub
+  // Create or update the secret in the GitHub repo
   await octokit.actions.createOrUpdateRepoSecret({
     owner,
     repo,
     secret_name: secretName,
     encrypted_value: encryptedValue,
-    key_id: keyId,
+    key_id: keyId
   });
 
   console.log(`Secret "${secretName}" updated successfully.`);
 }
 
-// Se il modulo viene eseguito direttamente, esegue la funzione
-if (process.argv[1] === new URL(import.meta.url).pathname) {
-  updateGithubSecret().catch((err) => {
+// If file is run directly from the CLI, execute the function
+if (import.meta.url === process.argv[1] || import.meta.url === new URL(process.argv[1], 'file://').href) {
+  updateGithubSecret().catch(err => {
     console.error(err);
     process.exit(1);
   });
 }
-
-export { updateGithubSecret };

@@ -1,6 +1,6 @@
 // scripts/showEnvVars.js
-require('dotenv').config(); // Questo è utile per lo sviluppo locale
-const config = require('../config/envConfig');
+import 'dotenv/config';
+import config from '../config/envConfig.js';
 
 console.log('Relevant Environment Variables:');
 console.log('REDIS_HOST:', config.redis.host);

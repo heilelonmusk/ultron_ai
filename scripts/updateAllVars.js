@@ -1,8 +1,12 @@
 // scripts/updateAllVars.js
-const fs = require('fs');
-const path = require('path');
+import 'dotenv/config'; // Opzionale, se vuoi che legga variabili da .env
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Prova a ottenere il current working directory, altrimenti usa __dirname
+// Se vuoi ottenere il current working dir di questo file
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 let cwd;
 try {
   cwd = process.cwd();
@@ -10,22 +14,24 @@ try {
   cwd = __dirname;
 }
 
-// Se esiste un file .env nel working directory, caricalo
+// Carica .env manualmente se vuoi
 if (fs.existsSync(path.join(cwd, '.env'))) {
-  require('dotenv').config({ path: path.join(cwd, '.env') });
+  // Non possiamo usare require('dotenv').config() in ESM, ma puoi importare 'dotenv/config'
+  // Oppure: import dotenv from 'dotenv'; dotenv.config({ path: path.join(cwd, '.env') });
 }
 
-const config = require('../config/envConfig');
+// Esempio di import config (dipende da come l’hai convertito)
+import config from '../config/envConfig.js';
 
-// Importa le funzioni di aggiornamento per ogni servizio
-const { updateGithubSecret } = require('./updateGithubVars');
-const { updateNetlifyVars } = require('./updateNetlifyVars');
-// Puoi aggiungere altri aggiornamenti per altri servizi qui
+// Import the update scripts
+import { updateGithubSecret } from './updateGithubVars.js';
+import { updateNetlifyVars } from './updateNetlifyVars.js';
+// More updates here if needed...
 
 /**
  * Updates environment variables on all services based on the current configuration.
  */
-async function updateAllVars() {
+export async function updateAllVars() {
   try {
     if (process.env.UPDATE_GITHUB_VARS === 'true') {
       console.log('Updating GitHub variables...');
@@ -42,8 +48,7 @@ async function updateAllVars() {
   }
 }
 
-if (require.main === module) {
+// If run directly from CLI
+if (import.meta.url === process.argv[1] || import.meta.url === new URL(process.argv[1], 'file://').href) {
   updateAllVars();
 }
-
-module.exports = { updateAllVars };

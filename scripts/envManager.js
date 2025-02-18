@@ -1,7 +1,11 @@
 // scripts/envManager.js
-const fs = require('fs');
-const path = require('path');
-const { program } = require('commander');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { Command } from 'commander'; // commander in ESM: 'commander' -> named import
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const envPath = path.join(process.cwd(), '.env');
 
@@ -30,6 +34,8 @@ function writeEnv(envObj) {
     .join('\n');
   fs.writeFileSync(envPath, content, 'utf8');
 }
+
+const program = new Command();
 
 program
   .command('set <key> <value>')
