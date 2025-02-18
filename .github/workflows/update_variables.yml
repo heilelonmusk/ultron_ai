@@ -1,4 +1,4 @@
-name: Update Variables and Netlify Settings
+name: Update Variables
 
 on:
   push:
