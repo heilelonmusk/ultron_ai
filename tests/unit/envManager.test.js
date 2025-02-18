@@ -4,19 +4,19 @@
  * Tests focus on managing the .env file locally, ensuring that variables can be set, listed, and deleted.
  */
 
-const { expect } = require('chai');
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const { execSync } = require('child_process');
+import { expect } from 'chai';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 
 describe('envManager CLI', function () {
-  // Creiamo una directory temporanea per testare il file .env in isolamento.
+  // Create a temporary directory for testing .env in isolation
   const tempDir = path.join(os.tmpdir(), 'envManagerTest');
   const envFilePath = path.join(tempDir, '.env');
-  const envManagerScript = path.join(process.cwd(), 'scripts', 'envManager.js');
+  let envManagerScript;
 
-  // Helper per creare un file .env vuoto
   function createEmptyEnvFile() {
     fs.writeFileSync(envFilePath, '', 'utf8');
   }
@@ -26,26 +26,28 @@ describe('envManager CLI', function () {
       fs.mkdirSync(tempDir, { recursive: true });
     }
     createEmptyEnvFile();
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    // If the script is at /scripts/envManager.js from repo root:
+    envManagerScript = path.resolve(__dirname, '../../scripts/envManager.js');
   });
 
   after(function () {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  // Cambiamo la directory corrente in quella temporanea per ogni test
   beforeEach(function () {
     process.chdir(tempDir);
   });
 
   it('should set a new environment variable', function () {
-    // Esegui il comando: node scripts/envManager.js set TEST_VAR "test_value"
     execSync(`node ${envManagerScript} set TEST_VAR "test_value"`, { stdio: 'inherit' });
     const envContent = fs.readFileSync(envFilePath, 'utf8');
     expect(envContent).to.include('TEST_VAR=test_value');
   });
 
   it('should list environment variables', function () {
-    // Imposta una variabile e poi esegui il comando list
     execSync(`node ${envManagerScript} set LIST_VAR "list_value"`, { stdio: 'inherit' });
     const output = execSync(`node ${envManagerScript} list`, { encoding: 'utf8' });
     expect(output).to.include('LIST_VAR');
@@ -53,7 +55,6 @@ describe('envManager CLI', function () {
   });
 
   it('should delete an environment variable', function () {
-    // Imposta una variabile e poi esegui il comando delete
     execSync(`node ${envManagerScript} set DELETE_VAR "to_delete"`, { stdio: 'inherit' });
     execSync(`node ${envManagerScript} delete DELETE_VAR`, { stdio: 'inherit' });
     const envContent = fs.readFileSync(envFilePath, 'utf8');

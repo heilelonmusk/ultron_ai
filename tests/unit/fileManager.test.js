@@ -4,31 +4,29 @@
  * All functions and annotations are in English to maintain consistency.
  */
 
-const { expect } = require('chai');
-const fs = require('fs');
-const path = require('path');
-const { 
-  createDirectory, 
-  createFile, 
-  updateFile, 
-  renameFile, 
-  copyFile, 
-  moveFile 
-} = require('../../src/utils/fileManager');
+import { expect } from 'chai';
+import fs from 'fs';
+import path from 'path';
+import {
+  createDirectory,
+  createFile,
+  updateFile,
+  renameFile,
+  copyFile,
+  moveFile
+} from '../../src/utils/fileManager.js';
 
 describe('fileManager Module', () => {
-  const testDir = path.join(__dirname, 'tempTestDir');
+  const testDir = path.join(process.cwd(), 'tempTestDir');
   const testFile = path.join(testDir, 'test.txt');
 
   before(() => {
-    // Remove any previous test directory if it exists
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
   });
 
   after(() => {
-    // Clean up the test directory after tests complete
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
@@ -61,7 +59,6 @@ describe('fileManager Module', () => {
   });
 
   it('should copy a file', () => {
-    // Create a source file and copy it.
     const sourceFile = path.join(testDir, 'source.txt');
     const copiedFile = path.join(testDir, 'copied.txt');
     createFile(sourceFile, 'Content to copy');
@@ -72,7 +69,6 @@ describe('fileManager Module', () => {
   });
 
   it('should move a file', () => {
-    // Create a source file and then move it.
     const sourceFile = path.join(testDir, 'moveSource.txt');
     const destinationFile = path.join(testDir, 'moved.txt');
     createFile(sourceFile, 'Content to move');
