@@ -87,7 +87,8 @@
     },
     "index": "No description available",
     "info": {
-      "exclude": "No description available"
+      "exclude": "No description available",
+      "refs": "No description available"
     },
     "logs": {
       "HEAD": "No description available",
@@ -113,6 +114,18 @@
           "HEAD": "No description available",
           "main": "No description available"
         }
+      }
+    },
+    "objects": {
+      "info": {
+        "commit-graph": "No description available",
+        "packs": "No description available"
+      },
+      "pack": {
+        "pack-6f4df21a85c505e5ba16b5334630d04f5ddc4500.idx": "No description available",
+        "pack-6f4df21a85c505e5ba16b5334630d04f5ddc4500.pack": "No description available",
+        "pack-de39254bf78fe1ba89a96fc5aaf8b257b1060c35.idx": "No description available",
+        "pack-de39254bf78fe1ba89a96fc5aaf8b257b1060c35.pack": "No description available"
       }
     }
   },

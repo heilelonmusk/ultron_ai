@@ -2,6 +2,7 @@
 
 ├── .github
 │   └── workflows
+│       ├── bd.yml - No description available
 │       ├── update_file_tree.yml - No description available
 │       ├── update_structure.yml - No description available
 │       └── update_variables.yml - No description available
@@ -15,14 +16,14 @@
 │   └── redisConfig.js - No description available
 
 ├── docs
-│   ├── AI_DEVELOPER_NOTES.md - No description available
-│   ├── project_meta.yaml - No description available
-│   ├── README.md - No description available
-│   └── TROUBLESHOOTING.md - No description available
+│   ├── mylogs
+│   │   └── 19020505_999.md - No description available
+│   ├── function_doc - No description available
+│   └── project_meta.yaml - No description available
 
-├── logs - Log files for the application.
+├── logs - Directory for log files (currently empty)
 
-├── node_modules [137 items]
+├── node_modules [254 items]
 
 ├── public - Static assets like HTML, CSS, images, etc.
 
@@ -40,12 +41,12 @@
 │   │   ├── controllers
 │   │   ├── routes
 │   │   └── services
-│   ├── iframe - Module for blockchain-based airdrop verification.
+│   ├── iframe - Module for blockchain-based airdrop verification (placeholder)
 │   ├── modules
 │   │   ├── intent - Intent recognition modules.
 │   │   ├── loggin
 │   │   └── nlp - Natural Language Processing modules.
-│   ├── ultron_chat - Module for the AI chatbot UI and interaction logic.
+│   ├── ultron_chat - Module for the AI chatbot UI and interaction logic (placeholder)
 │   ├── utils
 │   │   ├── buildStructure.js - No description available
 │   │   ├── compareStructure.js - No description available
@@ -79,6 +80,8 @@
 ├── env.txt - No description available
 
 ├── file_tree.txt - No description available
+
+├── jsdoc.json - No description available
 
 ├── LICENSE - No description available
 
