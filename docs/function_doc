@@ -1,0 +1,190 @@
+# Repository Function Documentation
+
+This document provides a detailed overview of every function implemented in the repository, along with their descriptions and intended usage. This serves as a reference for testing, maintenance, and further development of our autonomous, resilient ecosystem.
+
+---
+
+## 1. **src/utils/compareStructure.js**
+
+### `generateStructureJson(dirPath, excludeDirs = [])`
+- **Description:**  
+  Recursively scans the directory specified by `dirPath` (excluding directories listed in the `excludeDirs` array) and returns an object representing the directory structure. In the returned object, directories are represented as nested objects and files are represented by `null`.
+
+### `loadDesiredStructure(configPath)`
+- **Description:**  
+  Reads and parses the JSON file located at `configPath` (typically `"structure.config.json"`) to obtain the desired directory structure. If the file is missing or cannot be parsed, it logs an error and returns an empty object.
+
+### `compareStructures(desired, current)`
+- **Description:**  
+  Recursively compares two structure objects—`desired` (the target structure) and `current` (the actual structure). It returns an object with two properties:  
+  - `missing`: Elements present in the desired structure but missing in the current structure.  
+  - `extra`: Elements present in the current structure but not defined in the desired structure.
+
+### `checkStructureDifferences(baseDir, configPath, excludeDirs = [])`
+- **Description:**  
+  Loads the desired structure from the file at `configPath` and generates the current structure by scanning `baseDir` (excluding directories in `excludeDirs`). It compares the two using `compareStructures`, prints the differences, and returns the diff object.
+
+### `saveStructure(dirPath, outputFile, excludeDirs = [])`
+- **Description:**  
+  Recursively scans the directory at `dirPath` to generate its structure and writes the resulting JSON object to `outputFile`. This function is useful for creating a backup or for updating the repository’s structure configuration.
+
+---
+
+## 2. **src/utils/fileTreeGenerator.js**
+
+### `loadMetadata(metaPath)`
+- **Description:**  
+  Loads and parses the metadata JSON file located at `metaPath` (typically `"description.json"`). If the file is missing or fails to parse, it logs an error and returns an empty object.
+
+### `getDescription(metadata, keyPath)`
+- **Description:**  
+  Retrieves a description string from the `metadata` object corresponding to the `keyPath` (a string with levels separated by “/”). If no description is found, it returns an empty string.
+
+### `generateFileTree(dirPath, options = {}, indent = '', metadata = {}, currentKey = '')`
+- **Description:**  
+  Recursively generates a textual tree representation of the directory structure starting at `dirPath`.  
+  - The `options` object can include a `compressDirs` array specifying directory names to compress into a single line with an item count.  
+  - Descriptions from the `metadata` object are appended to each node if available.
+  - The function handles indentation and returns a string that visually represents the file tree.
+
+### `writeFileTree(baseDir, outputFile, options = {}, metaPath = './description.json')`
+- **Description:**  
+  Loads metadata from the file at `metaPath`, generates the file tree for `baseDir` using `generateFileTree`, and writes the resulting tree string to `outputFile`. Logs a confirmation message when the tree is successfully generated.
+
+---
+
+## 3. **src/utils/updateDescriptions.js**
+
+### `collectFilePaths(dirPath, excludeDirs = [], maxItems = 100)`
+- **Description:**  
+  Recursively scans the directory at `dirPath` to collect relative file paths. It excludes directories listed in `excludeDirs` and skips any directory containing more than `maxItems` items. Returns an array of file paths.
+
+### `updateDescriptions(metadataPath, fileList, placeholder = 'No description available')`
+- **Description:**  
+  Updates the metadata JSON file located at `metadataPath` by ensuring that each file path from `fileList` is represented in the metadata.  
+  - For each file, the function splits the path into keys and creates nested objects if they do not already exist.  
+  - If a key is missing, it sets the corresponding value to the provided `placeholder`.
+  - Finally, it writes the updated metadata back to the file and logs a confirmation.
+
+---
+
+## 4. **src/utils/fileManager.js**
+
+### `createDirectory(dirPath)`
+- **Description:**  
+  Creates a directory at `dirPath` (including parent directories) if it does not exist. Logs a message indicating the creation.
+
+### `createFile(filePath, content = '// Placeholder')`
+- **Description:**  
+  Creates a file at `filePath` with the specified `content` if the file does not already exist. The default content is a placeholder comment. Logs the creation of the file.
+
+### `updateFile(filePath, content, options = { flag: 'w' })`
+- **Description:**  
+  Writes new `content` to the file at `filePath` using the given write options (default is to overwrite). Logs a confirmation message.
+
+### `renameFile(oldPath, newPath)`
+- **Description:**  
+  Renames or moves a file from `oldPath` to `newPath` if it exists. Logs the operation; if the source file is not found, it logs an error.
+
+### `copyFile(source, destination)`
+- **Description:**  
+  Copies a file from `source` to `destination` if the source file exists. Logs the action or an error if the file is missing.
+
+### `moveFile(source, destination)`
+- **Description:**  
+  Moves (renames) a file from `source` to `destination`. Logs a success message or an error if the source file is not found.
+
+---
+
+## 5. **src/utils/buildStructure.js**
+
+### `loadStructureConfig()`
+- **Description:**  
+  Reads and parses the `structure.config.json` file from the repository’s root directory. If the file is missing or fails to parse, it logs an error and exits the process. Returns the structure configuration object.
+
+### `createStructure(basePath, structure)`
+- **Description:**  
+  Recursively creates directories and files based on the provided `structure` configuration.  
+  - If `structure` is an array, it treats each element as a file name and creates a file with placeholder content.  
+  - If `structure` is an object, it treats keys as directory names and recursively creates the nested structure using functions from `fileManager.js`.
+
+### `buildRepositoryStructure()`
+- **Description:**  
+  The main function to build the repository’s directory structure. It loads the desired structure using `loadStructureConfig()` and creates the directories and files accordingly via `createStructure()`. This function is intended to be run as a standalone CLI command.
+
+---
+
+## 6. **scripts/updateGithubVars.js**
+
+### `updateGithubSecret()`
+- **Description:**  
+  Updates a GitHub repository secret using the GitHub API. The function performs the following steps:
+  1. Verifies that required environment variables (`MY_GITHUB_OWNER`, `MY_GITHUB_REPO`, and `MY_GITHUB_TOKEN`) are set.
+  2. Uses Octokit to fetch the repository’s public key.
+  3. Encrypts the `MY_GITHUB_TOKEN` using tweetsodium and the fetched public key.
+  4. Updates (or creates) the secret on GitHub with the encrypted token.
+  Logs a success message upon completion.
+
+---
+
+## 7. **scripts/updateAllVars.js**
+
+### `updateAllVars()`
+- **Description:**  
+  Checks the environment flags `UPDATE_GITHUB_VARS` and `UPDATE_NETLIFY_VARS`.  
+  - If `UPDATE_GITHUB_VARS` is set to "true", it calls `updateGithubSecret()` to update the GitHub secret.
+  - If `UPDATE_NETLIFY_VARS` is set to "true", it calls `updateNetlifyVars()` to update Netlify environment variables.
+  Logs messages to indicate progress and errors. This function is used to propagate environment variable updates across multiple services.
+
+---
+
+## 8. **scripts/updateNetlifyVars.js**
+
+### `updateNetlifyVars()`
+- **Description:**  
+  Updates a Netlify environment variable by sending a PUT request to the Netlify API.  
+  - Retrieves necessary values (e.g., `MONGO_URI`) and requires `NETLIFY_SITE_ID` and `NETLIFY_AUTH_TOKEN` to be set.
+  - Sends the new value to Netlify using the API.
+  Logs a success message or throws an error if the API response indicates a failure.
+
+---
+
+## 9. **scripts/envManager.js**
+
+### CLI Functionality for Environment Variables
+- **Description:**  
+  Provides a command-line interface for managing the local `.env` file using Commander.js. It includes the following commands:
+  - **set `<key> <value>`:**  
+    Sets a new environment variable or updates an existing one in the `.env` file.
+  - **delete `<key>`:**  
+    Deletes an environment variable from the `.env` file.
+  - **list:**  
+    Lists all environment variables currently defined in the `.env` file.
+  Logs appropriate messages based on the operation performed.
+
+---
+
+## 10. **scripts/autoUpdateDescriptions.js**
+
+### Description:
+- **Script Purpose:**  
+  Automatically updates the `description.json` file with placeholders for any new files found in the repository. It performs the following steps:
+  1. Determines the base directory (repository root) and constructs the path to `description.json`.
+  2. Uses `collectFilePaths()` (from `updateDescriptions.js`) to gather all file paths, excluding directories such as `node_modules`.
+  3. Calls `updateDescriptions()` to update the `description.json` file with placeholders for any new files.
+  Logs messages to indicate the success of the update.
+
+---
+
+# Final Notes
+
+- **Integration:**  
+  The functions in `updateDescriptions.js` and `fileTreeGenerator.js` work together to ensure that any new files in the repository are reflected in the metadata (`description.json`) and that a corresponding file tree (`file_tree.txt`) is generated.
+- **Workflow Triggering:**  
+  The GitHub workflows should trigger these functions in the proper sequence (e.g., update structure config, then auto-update descriptions, then generate the file tree) to keep the repository configuration and metadata in sync.
+- **Environment Setup:**  
+  Ensure that your repository’s secrets (e.g., `MY_GITHUB_TOKEN`, `MY_GITHUB_OWNER`, etc.) are correctly set in GitHub. Also, verify that the working directory in your workflows is the repository root.
+
+---
+
+This document is intended to be updated as the project evolves. If new functions are added or existing ones modified, please update this documentation accordingly.
