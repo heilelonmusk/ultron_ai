@@ -12,6 +12,9 @@ on:
 jobs:
   update-tree:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
 
     steps:
       - name: Checkout repository
@@ -33,9 +36,7 @@ jobs:
           node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Auto-update Descriptions
-        run: |
-          cd $GITHUB_WORKSPACE
-          node scripts/autoUpdateDescriptions.js
+        run: node scripts/autoUpdateDescriptions.js
 
       - name: Generate File Tree
         run: |

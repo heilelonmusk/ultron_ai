@@ -1,0 +1,22 @@
+{
+    "config": "Contains configuration files like environment variables and service settings.",
+    "docs": "Holds all project documentation including README, developer notes, and troubleshooting guides.",
+    "src": {
+      "utils": "Utility modules for file management, tree generation, and structure bootstrapping.",
+      "api": "API endpoints, controllers, and services for the application.",
+      "modules": {
+        "nlp": "Natural Language Processing modules.",
+        "intent": "Intent recognition modules.",
+        "logging": "Logging utilities for monitoring and debugging."
+      },
+      "iframe": "Module for blockchain-based airdrop verification.",
+      "ultron_chat": "Module for the AI chatbot UI and interaction logic."
+    },
+    "tests": {
+      "unit": "Unit tests for individual modules.",
+      "integration": "Integration tests for overall system functionality."
+    },
+    "scripts": "Automation and maintenance scripts.",
+    "public": "Static assets like HTML, CSS, images, etc.",
+    "logs": "Log files for the application."
+  }
