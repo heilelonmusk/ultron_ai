@@ -1,5 +1,7 @@
 name: Update Tree
 
+# Se vuoi mantenere queste env variabili per altri scopi, puoi lasciarle.
+# Ma per il checkout, useremo secrets.GITHUB_TOKEN.
 env:
   MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
   MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
@@ -17,7 +19,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          # Usa il token fornito da GitHub Actions 
+          # (invece di un token personalizzato).
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up Node.js
