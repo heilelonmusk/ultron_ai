@@ -6,7 +6,7 @@ import { createDirectory, createFile } from './fileManager.js';
 /**
  * Loads the structure configuration from 'structure.config.json'.
  */
-function loadStructureConfig() {
+export function loadStructureConfig() {
   const configPath = path.join(process.cwd(), 'structure.config.json');
   if (!fs.existsSync(configPath)) {
     console.error('structure.config.json not found. Please create it to define the structure.');
@@ -24,7 +24,7 @@ function loadStructureConfig() {
 /**
  * Recursively creates directories and files based on the provided structure configuration.
  */
-function createStructure(basePath, structure) {
+export function createStructure(basePath, structure) {
   if (Array.isArray(structure)) {
     structure.forEach(file => {
       const filePath = path.join(basePath, file);
