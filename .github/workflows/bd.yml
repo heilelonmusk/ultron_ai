@@ -1,5 +1,9 @@
 name: Build and Deploy
 
+env:
+  MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+  MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
+
 on:
   push:
     branches:
