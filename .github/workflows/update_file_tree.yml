@@ -32,6 +32,9 @@ jobs:
         run: |
           node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
+      - name: Auto-update Descriptions
+        run: node scripts/autoUpdateDescriptions.js
+
       - name: Generate File Tree
         run: |
           node -e "import('./src/utils/fileTreeGenerator.js').then(mod => mod.writeFileTree(process.cwd(), 'file_tree.txt', { compressDirs: ['node_modules', '.git'] }, './description.json')).catch(err => { console.error(err); process.exit(1); })"
