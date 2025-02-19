@@ -6,7 +6,7 @@ env:
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Esegue ogni ora; modifica la frequenza se necessario
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -30,10 +30,8 @@ jobs:
 
       - name: Compare Current Structure with Saved Structure
         run: |
-          # Confronta la struttura attuale con quella salvata in structure.config.json
-          node -e "require('./src/utils/compareStructure').checkStructureDifferences(process.cwd(), 'structure.config.json', ['node_modules', '.git'])"
+          node -e "import('./src/utils/compareStructure.js').then(mod => mod.checkStructureDifferences(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Restore Missing Files and Directories
         run: |
-          # Se vengono rilevate discrepanze, esegue lo script di build per ricreare la struttura
-          node -e "require('./src/utils/buildStructure')"
+          node -e "import('./src/utils/buildStructure.js').then(mod => mod.buildRepositoryStructure()).catch(err => { console.error(err); process.exit(1); })"

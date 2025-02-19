@@ -1,7 +1,5 @@
 name: Update Tree
 
-# Se vuoi mantenere queste env variabili per altri scopi, puoi lasciarle.
-# Ma per il checkout, useremo secrets.GITHUB_TOKEN.
 env:
   MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
   MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
@@ -19,9 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          # Usa il token fornito da GitHub Actions 
-          # (invece di un token personalizzato).
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -34,10 +30,8 @@ jobs:
 
       - name: Update Structure Config with Placeholders
         run: |
-          # Aggiorna structure.config.json salvando la struttura corrente con placeholder
-          node -e "require('./src/utils/compareStructure').saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])"
+          node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Generate File Tree
         run: |
-          # Genera file_tree.txt basandosi sulla configurazione aggiornata
-          node -e "require('./src/utils/fileTreeGenerator').writeFileTree(process.cwd(), 'file_tree.txt', { compressDirs: ['node_modules', '.git'] }, './description.json')"
+          node -e "import('./src/utils/fileTreeGenerator.js').then(mod => mod.writeFileTree(process.cwd(), 'file_tree.txt', { compressDirs: ['node_modules', '.git'] }, './description.json')).catch(err => { console.error(err); process.exit(1); })"
