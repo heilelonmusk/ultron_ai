@@ -4,6 +4,8 @@ import path from 'path';
 
 /**
  * Loads metadata descriptions from a JSON file.
+ * @param {string} metaPath - The path to the metadata JSON file.
+ * @returns {object} The parsed metadata object or an empty object if the file doesn’t exist or fails to parse.
  */
 export function loadMetadata(metaPath) {
   if (fs.existsSync(metaPath)) {
@@ -15,21 +17,30 @@ export function loadMetadata(metaPath) {
       return {};
     }
   } else {
+    console.warn(`Metadata file not found at ${metaPath}`);
     return {};
   }
 }
 
 /**
  * Retrieves the description for a given key from the metadata.
+ * Traverses the metadata object using keys split by '/'.
+ * @param {object} metadata - The metadata object.
+ * @param {string} keyPath - The key path (e.g. "src/utils/fileManager.js").
+ * @returns {string} The description if found; otherwise, returns an empty string.
  */
 export function getDescription(metadata, keyPath) {
   const keys = keyPath.split('/');
   let current = metadata;
   for (let key of keys) {
-    const lowerKey = key.toLowerCase();
-    const foundKey = Object.keys(current).find(k => k.toLowerCase() === lowerKey);
-    if (foundKey) {
-      current = current[foundKey];
+    if (current && typeof current === 'object') {
+      const lowerKey = key.toLowerCase();
+      const foundKey = Object.keys(current).find(k => k.toLowerCase() === lowerKey);
+      if (foundKey) {
+        current = current[foundKey];
+      } else {
+        return '';
+      }
     } else {
       return '';
     }
@@ -39,6 +50,13 @@ export function getDescription(metadata, keyPath) {
 
 /**
  * Recursively generates a tree representation of the directory structure.
+ * Incorporates metadata descriptions when available.
+ * @param {string} dirPath - The directory to scan.
+ * @param {object} [options={}] - Options for tree generation (e.g., { compressDirs: ['node_modules', '.git'] }).
+ * @param {string} [indent=''] - The current indentation string for recursion.
+ * @param {object} [metadata={}] - Metadata object used for retrieving descriptions.
+ * @param {string} [currentKey=''] - The accumulated key path used for metadata lookup.
+ * @returns {string} A string representing the directory tree.
  */
 export function generateFileTree(
   dirPath,
@@ -56,8 +74,10 @@ export function generateFileTree(
     return `${indent}[Error reading directory]\n`;
   }
   
+  // Sort items alphabetically (case-insensitive)
   items.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   
+  // Separate directories and files
   const directories = items.filter(item => {
     try {
       return fs.statSync(path.join(dirPath, item)).isDirectory();
@@ -74,6 +94,7 @@ export function generateFileTree(
   });
   const sortedItems = directories.concat(files);
   
+  // Process each item
   sortedItems.forEach((item, index) => {
     const fullPath = path.join(dirPath, item);
     const isLast = index === sortedItems.length - 1;
@@ -84,10 +105,12 @@ export function generateFileTree(
     } catch {
       stats = null;
     }
+    // Build a new key for metadata lookup
     const newKey = currentKey ? `${currentKey}/${item}` : item;
     
     if (stats && stats.isDirectory()) {
       if (compressDirs.map(dir => dir.toLowerCase()).includes(item.toLowerCase())) {
+        // If the directory should be compressed, show the count of its items.
         let count = 0;
         try {
           count = fs.readdirSync(fullPath).length;
@@ -107,6 +130,7 @@ export function generateFileTree(
       tree += `${indent}${prefix}${item}${desc ? ' - ' + desc : ''}\n`;
     }
     
+    // Add an extra newline between top-level items
     if (indent === '' && !isLast) {
       tree += '\n';
     }
@@ -116,6 +140,10 @@ export function generateFileTree(
 
 /**
  * Writes the generated file tree to an output file.
+ * @param {string} baseDir - The base directory from which to generate the tree.
+ * @param {string} outputFile - The path of the output file (e.g., "file_tree.txt").
+ * @param {object} [options={}] - Options for tree generation.
+ * @param {string} [metaPath='./description.json'] - The path to the metadata JSON file.
  */
 export function writeFileTree(
   baseDir,

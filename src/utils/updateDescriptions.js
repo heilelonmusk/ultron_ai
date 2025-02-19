@@ -1,4 +1,3 @@
-// src/utils/updateDescriptions.js
 import fs from 'fs';
 import path from 'path';
 
@@ -57,27 +56,30 @@ export function updateDescriptions(metadataPath, fileList, placeholder = 'No des
     }
   }
   
-  // Funzione ricorsiva per impostare il placeholder
+  // Recursive function to set the placeholder
   function setPlaceholder(obj, keys) {
     if (keys.length === 0) return;
     const currentKey = keys[0];
-    // Se siamo all'ultimo livello, imposta il placeholder
+    // If we are at the last level, set the placeholder if key doesn't exist.
     if (keys.length === 1) {
-      obj[currentKey] = placeholder;
+      if (obj[currentKey] === undefined) {
+        obj[currentKey] = placeholder;
+      }
       return;
     }
-    // Se la chiave esiste ma non è un oggetto, trasformala in un oggetto (eliminando il valore precedente)
+    // If the key exists but is not an object, transform it into an object preserving its value.
     if (obj[currentKey] !== undefined && typeof obj[currentKey] !== 'object') {
-      obj[currentKey] = {};
+      const oldValue = obj[currentKey];
+      obj[currentKey] = { _desc: oldValue };
     }
-    // Se la chiave non esiste, creala come oggetto
+    // If the key doesn't exist, create it as an object.
     if (obj[currentKey] === undefined) {
       obj[currentKey] = {};
     }
     setPlaceholder(obj[currentKey], keys.slice(1));
   }
   
-  // Per ogni percorso, crea la struttura dei metadati e imposta il placeholder
+  // For each file path, create the metadata structure and set the placeholder.
   fileList.forEach(filePath => {
     const keys = filePath.split(path.sep);
     setPlaceholder(metadata, keys);
