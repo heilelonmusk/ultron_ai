@@ -1,45 +1,43 @@
-name: Update Variables
+name: Update Tree
+
+env:
+  MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+  MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
 
 on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 * * * *'  # Runs every hour; adjust as needed
-  workflow_dispatch:
 
 jobs:
-  update-variables:
+  update-tree:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ${{ github.workspace }}
-    env:
-      NETLIFY_SITE_ID: "${{ secrets.NETLIFY_SITE_ID }}"
-      NETLIFY_AUTH_TOKEN: "${{ secrets.NETLIFY_AUTH_TOKEN }}"
-      MONGO_URI: "${{ secrets.MONGO_URI }}"
-      REDIS_HOST: "${{ secrets.REDIS_HOST }}"
-      REDIS_PORT: "${{ secrets.REDIS_PORT }}"
-      REDIS_PASSWORD: "${{ secrets.REDIS_PASSWORD }}"
-      MY_GITHUB_TOKEN: "${{ secrets.MY_GITHUB_TOKEN }}"
-      MY_GITHUB_OWNER: "${{ secrets.MY_GITHUB_OWNER }}"
-      UPDATE_GITHUB_VARS: "true"
-      UPDATE_NETLIFY_VARS: "true"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: "${{ secrets.MY_GITHUB_TOKEN }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Update All Variables
-        run: node scripts/updateAllVars.js
+      - name: Update Structure Config with Placeholders
+        run: |
+          node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
+
+      - name: Auto-update Descriptions
+        run: node scripts/autoUpdateDescriptions.js
+
+      - name: Generate File Tree
+        run: |
+          node -e "import('./src/utils/fileTreeGenerator.js').then(mod => mod.writeFileTree(process.cwd(), 'file_tree.txt', { compressDirs: ['node_modules', '.git'] }, './description.json')).catch(err => { console.error(err); process.exit(1); })"
