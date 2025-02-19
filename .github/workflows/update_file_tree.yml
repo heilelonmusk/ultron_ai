@@ -33,7 +33,9 @@ jobs:
           node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Auto-update Descriptions
-        run: node scripts/autoUpdateDescriptions.js
+        run: |
+          cd $GITHUB_WORKSPACE
+          node scripts/autoUpdateDescriptions.js
 
       - name: Generate File Tree
         run: |
