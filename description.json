@@ -1,22 +1,132 @@
 {
-    "config": "Contains configuration files like environment variables and service settings.",
-    "docs": "Holds all project documentation including README, developer notes, and troubleshooting guides.",
-    "src": {
-      "utils": "Utility modules for file management, tree generation, and structure bootstrapping.",
-      "api": "API endpoints, controllers, and services for the application.",
-      "modules": {
-        "nlp": "Natural Language Processing modules.",
-        "intent": "Intent recognition modules.",
-        "logging": "Logging utilities for monitoring and debugging."
+  "config": {
+    "corsConfig.js": "No description available",
+    "envConfig.js": "No description available",
+    "mongooseConfig.js": "No description available",
+    "netlifyConfig.js": "No description available",
+    "rateLimitConfig.js": "No description available",
+    "redisConfig.js": "No description available"
+  },
+  "docs": {
+    "AI_DEVELOPER_NOTES.md": "No description available",
+    "README.md": "No description available",
+    "TROUBLESHOOTING.md": "No description available",
+    "project_meta.yaml": "No description available"
+  },
+  "src": {
+    "utils": {
+      "buildStructure.js": "No description available",
+      "compareStructure.js": "No description available",
+      "fileManager.js": "No description available",
+      "fileTreeGenerator.js": "No description available",
+      "updateDescriptions.js": "No description available"
+    },
+    "api": "API endpoints, controllers, and services for the application.",
+    "modules": {
+      "nlp": "Natural Language Processing modules.",
+      "intent": "Intent recognition modules.",
+      "logging": "Logging utilities for monitoring and debugging."
+    },
+    "iframe": "Module for blockchain-based airdrop verification.",
+    "ultron_chat": "Module for the AI chatbot UI and interaction logic.",
+    ".DS_Store": "No description available"
+  },
+  "tests": {
+    "unit": {
+      "autoUpdateDescriptions.test.js": "No description available",
+      "compareStructure.test.js": "No description available",
+      "envManager.test.js": "No description available",
+      "fileManager.test.js": "No description available",
+      "fileTreeGenerator.test.js": "No description available",
+      "showEnvVars.test.js": "No description available",
+      "updateAllVars.test.js": "No description available",
+      "updateGithubVars.test.js": "No description available",
+      "updateNetlifyVars.test.js": "No description available"
+    },
+    "integration": "Integration tests for overall system functionality.",
+    ".DS_Store": "No description available"
+  },
+  "scripts": {
+    "autoUpdateDescriptions.js": "No description available",
+    "envManager.js": "No description available",
+    "indexOfUpdates.js": "No description available",
+    "showEnvVars.js": "No description available",
+    "updateAllVars.js": "No description available",
+    "updateGithubVars.js": "No description available",
+    "updateNetlifyVars.js": "No description available"
+  },
+  "public": "Static assets like HTML, CSS, images, etc.",
+  "logs": "Log files for the application.",
+  ".DS_Store": "No description available",
+  ".env": "No description available",
+  ".git": {
+    "COMMIT_EDITMSG": "No description available",
+    "FETCH_HEAD": "No description available",
+    "HEAD": "No description available",
+    "ORIG_HEAD": "No description available",
+    "config": "No description available",
+    "description": "No description available",
+    "hooks": {
+      "applypatch-msg.sample": "No description available",
+      "commit-msg.sample": "No description available",
+      "fsmonitor-watchman.sample": "No description available",
+      "post-update.sample": "No description available",
+      "pre-applypatch.sample": "No description available",
+      "pre-commit.sample": "No description available",
+      "pre-merge-commit.sample": "No description available",
+      "pre-push.sample": "No description available",
+      "pre-rebase.sample": "No description available",
+      "pre-receive.sample": "No description available",
+      "prepare-commit-msg.sample": "No description available",
+      "push-to-checkout.sample": "No description available",
+      "update.sample": "No description available"
+    },
+    "index": "No description available",
+    "info": {
+      "exclude": "No description available"
+    },
+    "logs": {
+      "HEAD": "No description available",
+      "refs": {
+        "heads": {
+          "main": "No description available"
+        },
+        "remotes": {
+          "origin": {
+            "HEAD": "No description available",
+            "main": "No description available"
+          }
+        }
+      }
+    },
+    "packed-refs": "No description available",
+    "refs": {
+      "heads": {
+        "main": "No description available"
       },
-      "iframe": "Module for blockchain-based airdrop verification.",
-      "ultron_chat": "Module for the AI chatbot UI and interaction logic."
-    },
-    "tests": {
-      "unit": "Unit tests for individual modules.",
-      "integration": "Integration tests for overall system functionality."
-    },
-    "scripts": "Automation and maintenance scripts.",
-    "public": "Static assets like HTML, CSS, images, etc.",
-    "logs": "Log files for the application."
-  }
+      "remotes": {
+        "origin": {
+          "HEAD": "No description available",
+          "main": "No description available"
+        }
+      }
+    }
+  },
+  ".github": {
+    "workflows": {
+      "update_file_tree.yml": "No description available",
+      "update_structure.yml": "No description available",
+      "update_variables.yml": "No description available"
+    }
+  },
+  ".gitignore": "No description available",
+  "LICENSE": "No description available",
+  "README.md": "No description available",
+  "description.json": "No description available",
+  "env.txt": "No description available",
+  "file_tree.txt": "No description available",
+  "package-lock.json": "No description available",
+  "package.json": "No description available",
+  "structure.config.json": "No description available",
+  "ultron_ai@1.0.0": "No description available"
+}

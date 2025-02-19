@@ -2,34 +2,38 @@
 
 ├── .github
 │   └── workflows
-│       ├── update_file_tree.yml
-│       ├── update_structure.yml
-│       └── update_variables.yml
+│       ├── update_file_tree.yml - No description available
+│       ├── update_structure.yml - No description available
+│       └── update_variables.yml - No description available
 
-├── config - Contains configuration files like environment variables and service settings.
-│   ├── corsConfig.js
-│   ├── envConfig.js
-│   ├── mongooseConfig.js
-│   ├── netlifyConfig.js
-│   ├── rateLimitConfig.js
-│   └── redisConfig.js
+├── config
+│   ├── corsConfig.js - No description available
+│   ├── envConfig.js - No description available
+│   ├── mongooseConfig.js - No description available
+│   ├── netlifyConfig.js - No description available
+│   ├── rateLimitConfig.js - No description available
+│   └── redisConfig.js - No description available
 
-├── docs - Holds all project documentation including README, developer notes, and troubleshooting guides.
-│   ├── AI_DEVELOPER_NOTES.md
-│   ├── project_meta.yaml
-│   ├── README.md
-│   └── TROUBLESHOOTING.md
+├── docs
+│   ├── AI_DEVELOPER_NOTES.md - No description available
+│   ├── project_meta.yaml - No description available
+│   ├── README.md - No description available
+│   └── TROUBLESHOOTING.md - No description available
 
 ├── logs - Log files for the application.
 
-├── node_modules [102 items]
+├── node_modules [137 items]
 
 ├── public - Static assets like HTML, CSS, images, etc.
 
-├── scripts - Automation and maintenance scripts.
-│   ├── autoUpdateDescriptions.js
-│   ├── envManager.js
-│   └── updateNetlifyVars.js
+├── scripts
+│   ├── autoUpdateDescriptions.js - No description available
+│   ├── envManager.js - No description available
+│   ├── indexOfUpdates.js - No description available
+│   ├── showEnvVars.js - No description available
+│   ├── updateAllVars.js - No description available
+│   ├── updateGithubVars.js - No description available
+│   └── updateNetlifyVars.js - No description available
 
 ├── src
 │   ├── api - API endpoints, controllers, and services for the application.
@@ -42,42 +46,48 @@
 │   │   ├── loggin
 │   │   └── nlp - Natural Language Processing modules.
 │   ├── ultron_chat - Module for the AI chatbot UI and interaction logic.
-│   ├── utils - Utility modules for file management, tree generation, and structure bootstrapping.
-│   │   ├── buildStructure.js
-│   │   ├── compareStructure.js
-│   │   ├── fileManager.js
-│   │   ├── fileTreeGenerator.js
-│   │   └── updateDescriptions.js
-│   └── .DS_Store
+│   ├── utils
+│   │   ├── buildStructure.js - No description available
+│   │   ├── compareStructure.js - No description available
+│   │   ├── fileManager.js - No description available
+│   │   ├── fileTreeGenerator.js - No description available
+│   │   └── updateDescriptions.js - No description available
+│   └── .DS_Store - No description available
 
 ├── tests
 │   ├── integration - Integration tests for overall system functionality.
-│   ├── unit - Unit tests for individual modules.
-│   │   ├── compareStructure.test.js
-│   │   ├── fileManager.test.js
-│   │   └── fileTreeGenerator.test.js
-│   └── .DS_Store
+│   ├── unit
+│   │   ├── autoUpdateDescriptions.test.js - No description available
+│   │   ├── compareStructure.test.js - No description available
+│   │   ├── envManager.test.js - No description available
+│   │   ├── fileManager.test.js - No description available
+│   │   ├── fileTreeGenerator.test.js - No description available
+│   │   ├── showEnvVars.test.js - No description available
+│   │   ├── updateAllVars.test.js - No description available
+│   │   ├── updateGithubVars.test.js - No description available
+│   │   └── updateNetlifyVars.test.js - No description available
+│   └── .DS_Store - No description available
 
-├── .DS_Store
+├── .DS_Store - No description available
 
-├── .env
+├── .env - No description available
 
-├── .gitignore
+├── .gitignore - No description available
 
-├── description.json
+├── description.json - No description available
 
-├── env.txt
+├── env.txt - No description available
 
-├── file_tree.txt
+├── file_tree.txt - No description available
 
-├── LICENSE
+├── LICENSE - No description available
 
-├── package-lock.json
+├── package-lock.json - No description available
 
-├── package.json
+├── package.json - No description available
 
-├── README.md
+├── README.md - No description available
 
-├── structure.config.json
+├── structure.config.json - No description available
 
-└── ultron_ai@1.0.0
+└── ultron_ai@1.0.0 - No description available
