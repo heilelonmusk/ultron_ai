@@ -13,6 +13,7 @@
   "devDependencies": {
     "chai": "^5.2.0",
     "jsdoc": "^4.0.4",
+    "jsdoc-template": "^1.2.0",
     "mocha": "^11.1.0",
     "nock": "^14.0.1",
     "sinon": "^19.0.2"
