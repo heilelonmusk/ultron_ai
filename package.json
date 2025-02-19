@@ -7,10 +7,12 @@
   "scripts": {
     "build": "echo 'No build step defined'",
     "test": "mocha \"tests/**/*.test.js\"",
-    "deploy": "echo 'Deploy step not defined yet'"
+    "deploy": "echo 'Deploy step not defined yet'",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "devDependencies": {
     "chai": "^5.2.0",
+    "jsdoc": "^4.0.4",
     "mocha": "^11.1.0",
     "nock": "^14.0.1",
     "sinon": "^19.0.2"
