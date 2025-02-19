@@ -53,17 +53,22 @@ export function updateDescriptions(
   }
   
   function setPlaceholder(obj, keys) {
+    if (keys.length === 0) return;
+    const currentKey = keys[0];
+    // Se siamo all'ultimo livello, imposta il placeholder
     if (keys.length === 1) {
-      if (!obj[keys[0]]) {
-        obj[keys[0]] = placeholder;
-      }
+      obj[currentKey] = placeholder;
       return;
     }
-    const key = keys.shift();
-    if (!obj[key]) {
-      obj[key] = {};
+    // Se la chiave esiste ma non è un oggetto, trasformala in un oggetto (eliminando il valore precedente)
+    if (obj[currentKey] !== undefined && typeof obj[currentKey] !== 'object') {
+      obj[currentKey] = {};
     }
-    setPlaceholder(obj[key], keys);
+    // Se la chiave non esiste, creala come oggetto
+    if (obj[currentKey] === undefined) {
+      obj[currentKey] = {};
+    }
+    setPlaceholder(obj[currentKey], keys.slice(1));
   }
   
   fileList.forEach(filePath => {
