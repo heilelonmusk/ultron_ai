@@ -33,7 +33,8 @@ jobs:
           node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Auto-update Descriptions
-        run: node scripts/autoUpdateDescriptions.js
+        run: |
+          node -e "import('./scripts/autoUpdateDescriptions.js').then(() => console.log('Descriptions updated')).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Generate File Tree
         run: |
