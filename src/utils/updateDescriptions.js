@@ -1,3 +1,4 @@
+// src/utils/updateDescriptions.js
 import fs from 'fs';
 import path from 'path';
 
@@ -6,9 +7,9 @@ import path from 'path';
  * excluding directories with more than a specified number of items.
  *
  * @param {string} dirPath - The directory to scan.
- * @param {string[]} excludeDirs - Directory names to exclude.
+ * @param {string[]} excludeDirs - Directory names to exclude from recursion.
  * @param {number} maxItems - Maximum number of items allowed in a directory to process.
- * @returns {string[]} Array of relative file paths.
+ * @returns {string[]} An array of relative file paths.
  */
 export function collectFilePaths(dirPath, excludeDirs = [], maxItems = 100) {
   const filePaths = [];
@@ -56,30 +57,29 @@ export function updateDescriptions(metadataPath, fileList, placeholder = 'No des
     }
   }
   
-  // Recursive function to set the placeholder
+  // Recursive function to update the metadata object without overwriting existing descriptions.
   function setPlaceholder(obj, keys) {
     if (keys.length === 0) return;
     const currentKey = keys[0];
-    // If we are at the last level, set the placeholder if key doesn't exist.
     if (keys.length === 1) {
-      if (obj[currentKey] === undefined) {
+      // Only set the placeholder if the key does not exist.
+      if (!Object.prototype.hasOwnProperty.call(obj, currentKey)) {
         obj[currentKey] = placeholder;
       }
       return;
     }
-    // If the key exists but is not an object, transform it into an object preserving its value.
+    // If the key exists but is not an object, convert it into an object to allow nested keys.
     if (obj[currentKey] !== undefined && typeof obj[currentKey] !== 'object') {
-      const oldValue = obj[currentKey];
-      obj[currentKey] = { _desc: oldValue };
+      obj[currentKey] = {};
     }
-    // If the key doesn't exist, create it as an object.
+    // If the key does not exist, create it as an empty object.
     if (obj[currentKey] === undefined) {
       obj[currentKey] = {};
     }
     setPlaceholder(obj[currentKey], keys.slice(1));
   }
   
-  // For each file path, create the metadata structure and set the placeholder.
+  // Process each file path.
   fileList.forEach(filePath => {
     const keys = filePath.split(path.sep);
     setPlaceholder(metadata, keys);

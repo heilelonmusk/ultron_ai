@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        # Ensures every step runs in the repository root.
         working-directory: ${{ github.workspace }}
     steps:
       - name: Checkout repository
@@ -33,18 +32,14 @@ jobs:
 
       - name: Update Structure Config with Placeholders
         run: |
-          echo "Working directory: $(pwd)"
-          echo "Updating structure.config.json..."
-          node -e "import('./src/utils/compareStructure.js').then(mod => { mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git']); console.log('Structure config updated successfully.'); }).catch(err => { console.error('Error updating structure config:', err); process.exit(1); })"
+          node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Auto-update Descriptions
         run: |
           echo "Working directory: $(pwd)"
-          echo "Updating description.json..."
+          echo "Updating description file..."
           node scripts/autoUpdateDescriptions.js
 
       - name: Generate File Tree
         run: |
-          echo "Working directory: $(pwd)"
-          echo "Generating file_tree.txt..."
-          node -e "import('./src/utils/fileTreeGenerator.js').then(mod => { mod.writeFileTree(process.cwd(), 'file_tree.txt', { compressDirs: ['node_modules', '.git'] }, './description.json'); console.log('File tree generated successfully.'); }).catch(err => { console.error('Error generating file tree:', err); process.exit(1); })"
+          node -e "import('./src/utils/fileTreeGenerator.js').then(mod => mod.writeFileTree(process.cwd(), 'file_tree.txt', { compressDirs: ['node_modules', '.git'] }, './description.json')).catch(err => { console.error(err); process.exit(1); })"
