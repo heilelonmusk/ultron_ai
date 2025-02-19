@@ -4,32 +4,16 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 * * * *'
-  workflow_dispatch:
 
 jobs:
   update-variables:
     runs-on: ubuntu-latest
 
-    env:
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      MONGO_URI: ${{ secrets.MONGO_URI }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
-      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-      MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-      MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
-      # Flag per aggiornare i vari servizi automaticamente
-      UPDATE_GITHUB_VARS: "true"
-      UPDATE_NETLIFY_VARS: "true"
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}  # oppure se preferisci: ${{ secrets.GH_TOKEN }}
           fetch-depth: 0
 
       - name: Set up Node.js
