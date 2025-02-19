@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha \"tests/**/*.test.js\""
+    "build": "echo 'No build step defined'",
+    "test": "mocha \"tests/**/*.test.js\"",
+    "deploy": "echo 'Deploy step not defined yet'"
   },
   "devDependencies": {
     "chai": "^5.2.0",

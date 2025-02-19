@@ -33,14 +33,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      # (Opzionale) Debug: mostra il working directory e il contenuto
-      #- name: Debug: Show Working Directory
-      #  run: |
-      #    echo "Current working directory:"
-      #    pwd
-      #    echo "Repository files:"
-      #    ls -al
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -57,7 +49,3 @@ jobs:
 
       - name: Deploy
         run: npm run deploy
-
-      # (Opzionale) Debug: lista dei file dopo la build/deploy
-      #- name: Debug: List Files After Deployment
-      #  run: ls -al
