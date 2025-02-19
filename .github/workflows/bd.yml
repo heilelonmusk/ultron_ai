@@ -3,6 +3,12 @@ name: Build and Deploy
 env:
   MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
   MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
+  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  MONGO_URI: ${{ secrets.MONGO_URI }}
+  REDIS_HOST: ${{ secrets.REDIS_HOST }}
+  REDIS_PORT: ${{ secrets.REDIS_PORT }}
+  REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
 
 on:
   push:
@@ -16,16 +22,6 @@ jobs:
     defaults:
       run:
         working-directory: ${{ github.workspace }}
-    env:
-      MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-      MY_GITHUB_OWNER: ${{ secrets.MY_GITHUB_OWNER }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      MONGO_URI: ${{ secrets.MONGO_URI }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
-      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

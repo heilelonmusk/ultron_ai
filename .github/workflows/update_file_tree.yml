@@ -30,14 +30,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Show Working Directory
+        run: |
+          echo "Working directory: $(pwd)"
+
       - name: Update Structure Config with Placeholders
         run: |
           node -e "import('./src/utils/compareStructure.js').then(mod => mod.saveStructure(process.cwd(), 'structure.config.json', ['node_modules', '.git'])).catch(err => { console.error(err); process.exit(1); })"
 
       - name: Auto-update Descriptions
         run: |
-          echo "Working directory: $(pwd)"
-          echo "Updating description file..."
+          echo "Updating metadata descriptions..."
           node scripts/autoUpdateDescriptions.js
 
       - name: Generate File Tree
